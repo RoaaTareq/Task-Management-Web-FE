@@ -1,0 +1,37 @@
+// Variables (optional)
+$primary-color: #007bff;
+$primary-hover-color: darken($primary-color, 10%);
+$disabled-color: gray;
+
+// Scoped Button styles
+.button {
+  display: inline-block;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  background-color: $primary-color;
+  color: white;
+
+  &:hover {
+    background-color: $primary-hover-color;
+  }
+}
+
+.disabled {
+  background-color: $disabled-color;
+  cursor: not-allowed;
+}
+
+.secondary {
+  background-color: white;
+  color: $primary-color;
+  border: 2px solid $primary-color;
+
+  &:hover {
+    background-color: $primary-hover-color;
+    color: white;
+  }
+}

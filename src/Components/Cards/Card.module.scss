@@ -1,0 +1,46 @@
+// Scoped Card styles using CSS Modules
+.card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    max-width: 300px;
+    margin: 16px;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+  
+    &:hover {
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      transform: translateY(-4px);
+    }
+  }
+  
+  .cardImage {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+  }
+  
+  .cardBody {
+    padding: 16px;
+  }
+  
+  .cardTitle {
+    margin: 0;
+    font-size: 18px;
+    color: #333;
+  }
+  
+  .cardContent {
+    margin: 8px 0;
+    font-size: 14px;
+    color: #666;
+  }
+  
+  .cardFooter {
+    padding: 16px;
+    border-top: 1px solid #ddd;
+    background-color: #f9f9f9;
+    text-align: right;
+  }
+  

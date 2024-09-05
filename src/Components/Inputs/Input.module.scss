@@ -1,0 +1,25 @@
+.input {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    transition: border-color 0.3s ease;
+  
+    &--textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+  
+    &--disabled {
+      background-color: #f5f5f5;
+      cursor: not-allowed;
+    }
+  
+    &:focus {
+      border-color: #007bff;
+      outline: none;
+    }
+  }
+  
