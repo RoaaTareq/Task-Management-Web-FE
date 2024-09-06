@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import BurgerMenu from '../Components/Layout/BurgerMenu';
 import styles from './MobileNavBar.module.scss';
 
@@ -14,10 +15,10 @@ const MobileNavBar: React.FC = () => {
       <BurgerMenu onMenuToggle={handleMenuToggle} />
       {isMenuOpen && (
         <div className={styles.navLinks}>
-          <a href="#home" onClick={() => setIsMenuOpen(false)}>Home</a>
-          <a href="#services" onClick={() => setIsMenuOpen(false)}>Services</a>
-          <a href="#about" onClick={() => setIsMenuOpen(false)}>About</a>
-          <a href="#contact" onClick={() => setIsMenuOpen(false)}>Contact</a>
+          <Link to="/" onClick={() => setIsMenuOpen(false)}>Home</Link>
+          <Link to="/services" onClick={() => setIsMenuOpen(false)}>Services</Link>
+          <Link to="/about" onClick={() => setIsMenuOpen(false)}>About</Link>
+          <Link to="/contact" onClick={() => setIsMenuOpen(false)}>Contact</Link>
         </div>
       )}
     </nav>
