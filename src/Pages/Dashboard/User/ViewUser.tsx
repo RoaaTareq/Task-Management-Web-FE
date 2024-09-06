@@ -1,5 +1,5 @@
 import React from "react";
-import Card from "../../../Components/Cards/Card"; // Adjust the path as needed
+import Card from "../../../Components/Cards/Card"; 
 
 const handleEdit = () => {
     console.log("Edit clicked");
