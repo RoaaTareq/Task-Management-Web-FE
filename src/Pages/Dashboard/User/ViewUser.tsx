@@ -1,27 +1,42 @@
-import React from 'react';
-import Table from '../../../Components/Table/Table'; // Adjust the path as necessary
+import React from "react";
+import Card from "../../../Components/Cards/Card"; // Adjust the path as needed
 
-const handleEdit = (row: Record<string, any>) => {
-  console.log('Edit', row);
+const handleEdit = () => {
+    console.log("Edit clicked");
 };
 
-const handleDelete = (row: Record<string, any>) => {
-  console.log('Delete', row);
+const handleDelete = () => {
+    console.log("Delete clicked");
 };
 
-const columns = ['Name', 'Project Name', 'Email'];
-const data = [
-  { Name: 'John Doe', 'Project Name': 'Project A', Email: 'john@example.com' },
-  { Name: 'Jane Smith', 'Project Name': 'Project B', Email: 'jane@example.com' }
-];
+const ViewList = () => {
+    return (
+        <section>
+            <div className="container">
+                <div className="row">
+                    <div className="col-xl-3 col-lg-3 col-md-4 col-sm-12 col-xs-12">
+                        <Card title="Task Title" content="This is the content of the card." projectName="Project A" onEdit={handleEdit} onDelete={handleDelete} />
+                    </div>
+                    
+                    <div className="col-xl-3 col-lg-3 col-md-4 col-sm-12 col-xs-12">
+                        <Card title="Task Title" content="This is the content of the card." projectName="Project A" onEdit={handleEdit} onDelete={handleDelete} />
+                    </div>
+                    <div className="col-xl-3 col-lg-3 col-md-4 col-sm-12 col-xs-12">
+                        <Card title="Task Title" content="This is the content of the card." projectName="Project A" onEdit={handleEdit} onDelete={handleDelete} />
+                    </div>
+                    <div className="col-xl-3 col-lg-3 col-md-4 col-sm-12 col-xs-12">
+                        <Card title="Task Title" content="This is the content of the card." projectName="Project A" onEdit={handleEdit} onDelete={handleDelete} />
+                    </div>
+                    <div className="col-xl-3 col-lg-3 col-md-4 col-sm-12 col-xs-12">
+                        <Card title="Task Title" content="This is the content of the card." projectName="Project A" onEdit={handleEdit} onDelete={handleDelete} />
+                    </div>
+                    
+                    
 
-const ViewUser: React.FC = () => (
-  <Table 
-    columns={columns} 
-    data={data} 
-    onEdit={handleEdit} 
-    onDelete={handleDelete}
-  />
-);
+                </div>
+            </div>
+        </section>
+    );
+};
 
-export default ViewUser;
+export default ViewList;
