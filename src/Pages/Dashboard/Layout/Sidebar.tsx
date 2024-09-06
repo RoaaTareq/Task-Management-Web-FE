@@ -1,5 +1,5 @@
 import React from 'react';
-import Sidebar from './Sidebar'; // Import the Sidebar component
+import Sidebar from '../../../Components/Layout/SideBar'; // Import the Sidebar component
 
 const Dashboard: React.FC = () => {
   // Define the sidebar items with routes and text
@@ -12,12 +12,12 @@ const Dashboard: React.FC = () => {
   return (
     <div className="dashboard">
       {/* Call the Sidebar component */}
-      {/* <Sidebar
+      <Sidebar
         items={sidebarItems}
         title="Navigation"
         className="custom-sidebar"
         style={{ backgroundColor: '#f8f9fa', padding: '20px' }}
-      /> */}
+      />
       
       {/* Main content section */}
       <div className="main-content">

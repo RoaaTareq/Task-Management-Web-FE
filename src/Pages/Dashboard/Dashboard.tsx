@@ -3,12 +3,13 @@ import { Route, Routes } from 'react-router-dom';
 import TaskList from './Task/Task';
 import UserList from './User/UserList';
 import ProjectList from './Project/ProjectList';
+import Sidebar from '../Dashboard/Layout/Sidebar';
 
 const Dashboard: React.FC = () => {
   return (
     <section>
-      <div className="container">
-      
+      <div >
+      <Sidebar/>
         <div>
           <Routes>
             <Route path="/task" element={<TaskList />} />
