@@ -15,10 +15,10 @@ const MobileNavBar: React.FC = () => {
       <BurgerMenu onMenuToggle={handleMenuToggle} />
       {isMenuOpen && (
         <div className={styles.navLinks}>
-          <Link to="/" onClick={() => setIsMenuOpen(false)}>Home</Link>
-          <Link to="/services" onClick={() => setIsMenuOpen(false)}>Services</Link>
-          <Link to="/about" onClick={() => setIsMenuOpen(false)}>About</Link>
-          <Link to="/contact" onClick={() => setIsMenuOpen(false)}>Contact</Link>
+          <Link to="/home" onClick={() => setIsMenuOpen(false)}>Home</Link>
+          <Link to="/register" onClick={() => setIsMenuOpen(false)}>Register</Link>
+          <Link to="/login" onClick={() => setIsMenuOpen(false)}>Login</Link>
+        
         </div>
       )}
     </nav>
