@@ -1,10 +1,11 @@
 import React from 'react';
+import UserList from './Dashboard/User/UserList';
 
 const Home: React.FC = () => {
   return (
     <div>
       <h1>Home Page</h1>
-      {/* Add home content here */}
+      <UserList/>
     </div>
   );
 };
