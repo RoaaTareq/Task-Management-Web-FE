@@ -8,7 +8,7 @@ const TaskList: React.FC = () => {
   return (
     <section>
         <div className="container">
-            <div className="d-flex">
+            <div className="d-flex justify-content-between">
             <h1>Task</h1>
              <Button
               label="Add Task +"
