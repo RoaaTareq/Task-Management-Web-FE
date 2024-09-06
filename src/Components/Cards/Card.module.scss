@@ -9,6 +9,7 @@
     margin: 16px;
     transition: box-shadow 0.3s ease, transform 0.3s ease;
     padding: 20px;
+    border-top: 3px solid red;
   
     &:hover {
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);

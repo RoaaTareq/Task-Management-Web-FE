@@ -8,7 +8,7 @@ const Home: React.FC = () => {
     <div>
       <h1>Home Page</h1>
       {/* <UserList/> */}
-      {/* <ProjectList/> */}
+      <ProjectList/>
       <TaskList/>
       
     </div>

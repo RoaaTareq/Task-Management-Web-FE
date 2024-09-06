@@ -1,67 +1,42 @@
-import React from 'react';
-import Card from '../../../Components/Cards/Card'; // Adjust the path as needed
+import React from "react";
+import Card from "../../../Components/Cards/Card"; // Adjust the path as needed
 
 const handleEdit = () => {
-  console.log('Edit clicked');
+    console.log("Edit clicked");
 };
 
 const handleDelete = () => {
-  console.log('Delete clicked');
+    console.log("Delete clicked");
 };
 
 const ViewProject = () => {
-  return (
-    <section>
-      <div className="container">
-        <div className="row">
-          <div className="col-3">
-          <Card
-      title="Project Title"
-      content="This is the content of the card."
-      imageUrl="path/to/image.jpg"
-      footer={<div>Footer Content</div>}
-      projectName="Project A"
-      onEdit={handleEdit}
-      onDelete={handleDelete}
-    />
-          </div>
-          <div className="col-3">
-          <Card
-      title="Project Title"
-      content="This is the content of the card."
-      imageUrl="path/to/image.jpg"
-      footer={<div>Footer Content</div>}
-      projectName="Project A"
-      onEdit={handleEdit}
-      onDelete={handleDelete}
-    />
-          </div>
-          <div className="col-3">
-          <Card
-      title="Project Title"
-      content="This is the content of the card."
-      imageUrl="path/to/image.jpg"
-      footer={<div>Footer Content</div>}
-      projectName="Project A"
-      onEdit={handleEdit}
-      onDelete={handleDelete}
-    />
-          </div>
-          <div className="col-3">
-          <Card
-      title="Project Title"
-      content="This is the content of the card."
-      imageUrl="path/to/image.jpg"
-      footer={<div>Footer Content</div>}
-      projectName="Project A"
-      onEdit={handleEdit}
-      onDelete={handleDelete}
-    />
-          </div>
-        </div>
-      </div>
-    </section>
-  );
+    return (
+        <section>
+            <div className="container">
+                <div className="row">
+                    <div className="col-xl-3 col-lg-3 col-md-4 col-sm-12 col-xs-12">
+                        <Card title="Task Title" content="This is the content of the card." projectName="Project A" onEdit={handleEdit} onDelete={handleDelete} />
+                    </div>
+                    
+                    <div className="col-xl-3 col-lg-3 col-md-4 col-sm-12 col-xs-12">
+                        <Card title="Task Title" content="This is the content of the card." projectName="Project A" onEdit={handleEdit} onDelete={handleDelete} />
+                    </div>
+                    <div className="col-xl-3 col-lg-3 col-md-4 col-sm-12 col-xs-12">
+                        <Card title="Task Title" content="This is the content of the card." projectName="Project A" onEdit={handleEdit} onDelete={handleDelete} />
+                    </div>
+                    <div className="col-xl-3 col-lg-3 col-md-4 col-sm-12 col-xs-12">
+                        <Card title="Task Title" content="This is the content of the card." projectName="Project A" onEdit={handleEdit} onDelete={handleDelete} />
+                    </div>
+                    <div className="col-xl-3 col-lg-3 col-md-4 col-sm-12 col-xs-12">
+                        <Card title="Task Title" content="This is the content of the card." projectName="Project A" onEdit={handleEdit} onDelete={handleDelete} />
+                    </div>
+                    
+                    
+
+                </div>
+            </div>
+        </section>
+    );
 };
 
 export default ViewProject;
