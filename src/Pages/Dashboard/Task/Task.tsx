@@ -1,5 +1,6 @@
 import React from 'react'
 import Button from '../../../Components/Buttons/Button'
+import ViewTask from './ViewTask'
 
 
 
@@ -15,7 +16,9 @@ const TaskList: React.FC = () => {
               styleType="primary"
              />
             </div>
+            <ViewTask/>
         </div>
+        
     </section>
   );
 };
