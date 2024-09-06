@@ -11,7 +11,7 @@ const SideBar: React.FC = () => {
 
     return (
         <div className="dashboard">
-            <Sidebar items={sidebarItems} title="Navigation" className="custom-sidebar" style={{ backgroundColor: "#f8f9fa", padding: "20px" }} />
+            <Sidebar items={sidebarItems}  className="custom-sidebar" style={{ backgroundColor: "#f8f9fa", padding: "20px" }} />
         </div>
     );
 };

@@ -66,13 +66,9 @@
 
 .content {
   
-    /* flex: 1 1; */
-    /* background-color: #e9ecef; */
-    /* display: flex;
-    justify-content: center; */
     width:100%;
     min-height: 250vh;
-    padding:120px 
+    
 }
 
 .cards {
