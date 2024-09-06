@@ -10,13 +10,13 @@ const MainNavbar: React.FC = () => {
   ];
 
   return (
-    <div>
+   <div>
       <Navbar
         brandName="Task Mangament Tracker"
         links={links}
-        className="custom-navbar-class" // Optional
+        className="custom-navbar-class" 
       />
-      {/* Other components and content */}
+     
     </div>
   );
 };
