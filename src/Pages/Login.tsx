@@ -19,7 +19,6 @@ const Login: React.FC = () => {
   return (
     <section>
       <div className="container">
-        <h1>Login Page</h1>
         <div className="d-flex justify-content-center">
           <div>
             <form onSubmit={handleLogin} className={styles['form-container']}>
