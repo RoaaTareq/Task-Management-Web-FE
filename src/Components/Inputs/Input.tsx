@@ -2,7 +2,7 @@ import React from 'react';
 import styles from './Input.module.scss'; // Import CSS Module styles
 
 interface InputProps {
-  type?: 'text' | 'password' | 'email' | 'number' | 'textarea';
+  type?: 'text' | 'password' | 'email' | 'number' | 'textarea' | 'date'; // Added 'date'
   value: string;
   placeholder?: string;
   onChange: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
@@ -10,6 +10,7 @@ interface InputProps {
   style?: React.CSSProperties;
   className?: string; // Allow additional custom class names
 }
+
 
 const Input: React.FC<InputProps> = ({
   type = 'text',

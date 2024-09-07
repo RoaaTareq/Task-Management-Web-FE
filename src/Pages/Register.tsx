@@ -1,19 +1,37 @@
+// src/components/Register.tsx
+
 import React, { useState } from 'react';
 import Input from '../Components/Inputs/Input';  // Import your custom Input component
 import Button from '../Components/Buttons/Button';  // Import your custom Button component
 import styles from './Register.module.scss';  // Import your CSS module
+import { register } from '../services/authService';  // Import the register function from your service
 
 const Register: React.FC = () => {
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState<string>('');
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
 
-  const handleSubmit = (event: React.FormEvent) => {
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    console.log({ username, email, password });
-    setUsername('');
-    setEmail('');
-    setPassword('');
+    setError(null);
+    setSuccess(null);
+
+    try {
+      await register({
+        name: username,
+        email,
+        password,
+        password_confirmation: password,
+      });
+      setSuccess('Registration successful');
+      setUsername('');
+      setEmail('');
+      setPassword('');
+    } catch (error: any) {
+      setError('Registration failed');
+    }
   };
 
   return (
@@ -48,6 +66,8 @@ const Register: React.FC = () => {
                 type="submit"
                 styleType="primary"
               />
+              {success && <p className={styles['success-message']}>{success}</p>}
+              {error && <p className={styles['error-message']}>{error}</p>}
             </form>
           </div>
         </div>

@@ -4,7 +4,7 @@ import Navbar from '../../Components/Layout/NavBar'; // Adjust the path as neces
 
 const MainNavbar: React.FC = () => {
   const links = [
-    { href: '/home', text: 'Home' },
+    { href: '/', text: 'Home' },
     { href: '/login', text: 'Login' },
     { href: '/register', text: 'Register' }
   ];

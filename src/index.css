@@ -14,3 +14,32 @@
 body {
   font-family: 'Nunito Sans', sans-serif !important; /* Use the correct font-family */
 }
+
+/* App.css */
+.main-navbar {
+  display: block;
+}
+
+.mobile-navbar {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .main-navbar {
+    display: none;
+  }
+
+  .mobile-navbar {
+    display: block;
+  }
+}
+
+@media (min-width: 768px) {
+  .main-navbar {
+    display: block;
+  }
+
+  .mobile-navbar {
+    display: none;
+  }
+}
