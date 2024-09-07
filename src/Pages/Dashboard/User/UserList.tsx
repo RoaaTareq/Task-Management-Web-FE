@@ -7,14 +7,10 @@ const UserList: React.FC = () => {
   return (
     <section>
         <div className="container">
-            <div className="d-flex justify-content-between">
-            <h1>Task</h1>
-             {/* <Button
-              label="Add Task +"
-              type="submit"
-              styleType="primary"
-             /> */}
-            </div>
+           
+            <h1>Users</h1>
+           
+           
             <ViewUser/>
         </div>
     </section>
