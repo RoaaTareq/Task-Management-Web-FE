@@ -7,6 +7,7 @@ interface ButtonProps {
   type?: 'button' | 'submit' | 'reset';
   disabled?: boolean;
   styleType?: 'primary' | 'secondary'; // Additional prop for button style type
+  className?: string; // Add this line to allow passing a className prop
 }
 
 const Button: React.FC<ButtonProps> = ({
@@ -15,6 +16,7 @@ const Button: React.FC<ButtonProps> = ({
   type = 'button',
   disabled = false,
   styleType = 'primary',
+  className, // Accept className as a prop
 }) => {
   const buttonClass = disabled
     ? styles.disabled
@@ -27,7 +29,7 @@ const Button: React.FC<ButtonProps> = ({
       type={type}
       onClick={onClick}
       disabled={disabled}
-      className={buttonClass}
+      className={`${buttonClass} ${className ? className : ''}`} // Merge internal styles with passed className
     >
       {label}
     </button>

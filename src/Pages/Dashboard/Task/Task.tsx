@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import Button from '../../../Components/Buttons/Button';
 import ViewTask from './ViewTask';
 import CreateTask from './Modal/CreateTask';
+import styles from './CSS/Task.module.scss'
 
 interface Task {
   title: string;
@@ -54,17 +55,18 @@ const TaskList: React.FC = () => {
             type="submit"
             styleType="primary"
             onClick={handleAddTaskClick}
-          />
+            className={styles.btnOpen}
+            />    
         </div>
 
-        {/* Conditionally render the CreateTask form */}
+       
         {showCreateTask && (
           <div ref={createTaskRef} className="create-task-form">
-            <CreateTask onAddTask={handleAddTask} /> {/* Pass handleAddTask to CreateTask */}
+            <CreateTask onAddTask={handleAddTask} /> 
           </div>
         )}
 
-        {/* Pass tasks to ViewTask */}
+       
         <ViewTask tasks={tasks} />
       </div>
     </section>

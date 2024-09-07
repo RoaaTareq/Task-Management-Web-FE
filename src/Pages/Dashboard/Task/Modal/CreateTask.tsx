@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Input from '../../../../Components/Inputs/Input';
 import SelectList from '../../../../Components/DropDownList/SelectList';
 import Button from '../../../../Components/Buttons/Button';
+import styles from '../CSS/Task.module.scss'; // Import CSS Module styles
 
 interface CreateTaskProps {
   onAddTask: (task: { title: string; projectName: string; content: string }) => void;
@@ -53,10 +54,7 @@ const CreateTask: React.FC<CreateTaskProps> = ({ onAddTask }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h2>Create Task</h2>
-      
-      {/* Task Title Input */}
+    <form onSubmit={handleSubmit} className={styles['Create-form']}>
       <Input
         value={taskTitle}
         placeholder="Task Title"
