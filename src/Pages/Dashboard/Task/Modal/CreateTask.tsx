@@ -118,7 +118,7 @@ const CreateTask: React.FC<CreateTaskProps> = ({ onAddTask, onClose }) => {
         />
         
         <Button label="Add Task" type="submit" styleType="primary" />
-        <Button label="Cancel" type="button" styleType="secondary" onClick={onClose} />
+        <Button label="Cancel" type="button" styleType="secondary" className='mt-4' onClick={onClose} />
       </form>
     </div>
   );

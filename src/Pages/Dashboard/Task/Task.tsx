@@ -1,4 +1,3 @@
-// TaskList.tsx
 import React, { useState, useRef, useEffect } from 'react';
 import Button from '../../../Components/Buttons/Button';
 import ViewTask from './ViewTask';
@@ -11,6 +10,9 @@ interface Task {
   title: string;
   projectName: string;
   content: string;
+  priority: string;
+  startTime: string;
+  endTime: string;
 }
 
 const TaskList: React.FC = () => {
@@ -41,10 +43,22 @@ const TaskList: React.FC = () => {
     };
   }, [showCreateTask]);
 
-  const handleAddTask = (task: { title: string; projectName: string; content: string }) => {
-    setTasks((prevTasks) => [...prevTasks, { ...task, id: tasks.length + 1 }]);
+  const handleAddTask = (task: {
+    title: string;
+    projectName: string;
+    content: string;
+    priority: string;
+    startTime: string;
+    endTime: string;
+  }) => {
+    const newTask: Task = {
+      ...task,
+      id: tasks.length + 1, // Ensure unique ID or handle ID generation differently
+    };
+    setTasks((prevTasks) => [...prevTasks, newTask]);
     setShowCreateTask(false);
   };
+
   const handleCloseForm = () => {
     setShowCreateTask(false); // Hide form when cancel or outside click
   };
