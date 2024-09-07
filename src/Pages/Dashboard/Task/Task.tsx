@@ -1,10 +1,13 @@
+// TaskList.tsx
 import React, { useState, useRef, useEffect } from 'react';
 import Button from '../../../Components/Buttons/Button';
 import ViewTask from './ViewTask';
 import CreateTask from './Modal/CreateTask';
-import styles from './CSS/Task.module.scss'
+import EditTask from './Modal/EditTask'; // Ensure the correct import path
+import styles from './CSS/Task.module.scss';
 
 interface Task {
+  id: number;
   title: string;
   projectName: string;
   content: string;
@@ -12,15 +15,14 @@ interface Task {
 
 const TaskList: React.FC = () => {
   const [showCreateTask, setShowCreateTask] = useState(false);
-  const [tasks, setTasks] = useState<Task[]>([]); // Store tasks here
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const [editTaskId, setEditTaskId] = useState<number | null>(null);
   const createTaskRef = useRef<HTMLDivElement>(null);
 
-  // Toggle form visibility
   const handleAddTaskClick = () => {
     setShowCreateTask(true);
   };
 
-  // Close form when clicked outside
   const handleClickOutside = (event: MouseEvent) => {
     if (createTaskRef.current && !createTaskRef.current.contains(event.target as Node)) {
       setShowCreateTask(false);
@@ -39,16 +41,26 @@ const TaskList: React.FC = () => {
     };
   }, [showCreateTask]);
 
-  // Function to add new task to the list
-  const handleAddTask = (task: Task) => {
-    setTasks((prevTasks) => [...prevTasks, task]); // Add new task to state
-    setShowCreateTask(false); // Close the form after adding the task
+  const handleAddTask = (task: { title: string; projectName: string; content: string }) => {
+    setTasks((prevTasks) => [...prevTasks, { ...task, id: tasks.length + 1 }]);
+    setShowCreateTask(false);
+  };
+
+  const handleEditTask = (taskId: number, updatedTask: Task) => {
+    setTasks((prevTasks) =>
+      prevTasks.map((task) => (task.id === taskId ? updatedTask : task))
+    );
+    setEditTaskId(null);
+  };
+
+  const handleEditClick = (taskId: number) => {
+    setEditTaskId(taskId);
   };
 
   return (
     <section>
       <div className="container">
-        <div className="d-flex justify-content-between">
+        <div className="d-flex justify-content-between mt-5">
           <h1>Task</h1>
           <Button
             label="Add Task +"
@@ -56,18 +68,25 @@ const TaskList: React.FC = () => {
             styleType="primary"
             onClick={handleAddTaskClick}
             className={styles.btnOpen}
-            />    
+          />
         </div>
 
-       
         {showCreateTask && (
           <div ref={createTaskRef} className="create-task-form">
-            <CreateTask onAddTask={handleAddTask} /> 
+            <CreateTask onAddTask={handleAddTask} />
           </div>
         )}
 
-       
-        <ViewTask tasks={tasks} />
+        {editTaskId !== null && (
+          <div className="edit-task-form">
+            <EditTask
+              task={tasks.find((task) => task.id === editTaskId)!}
+              onEditTask={(updatedTask) => handleEditTask(editTaskId, updatedTask)}
+            />
+          </div>
+        )}
+
+        <ViewTask tasks={tasks} onEdit={handleEditClick} />
       </div>
     </section>
   );

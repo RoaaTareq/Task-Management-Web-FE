@@ -12,10 +12,6 @@ const CreateTask: React.FC<CreateTaskProps> = ({ onAddTask }) => {
   // State management for form fields
   const [taskTitle, setTaskTitle] = useState('');
   const [projectName, setProjectName] = useState('');
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
-  const [assignedUser, setAssignedUser] = useState('');
-  const [priority, setPriority] = useState('');
   const [description, setDescription] = useState('');
 
   // Example options for dropdown lists
@@ -24,33 +20,14 @@ const CreateTask: React.FC<CreateTaskProps> = ({ onAddTask }) => {
     { value: 'project2', label: 'Project 2' },
   ];
 
-  const userOptions = [
-    { value: 'user1', label: 'User 1' },
-    { value: 'user2', label: 'User 2' },
-  ];
-
-  const priorityOptions = [
-    { value: 'high', label: 'High' },
-    { value: 'medium', label: 'Medium' },
-    { value: 'low', label: 'Low' },
-  ];
-
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    // Form submit logic (e.g., send data to API)
     const formData = {
-      taskTitle,
+      title: taskTitle,
       projectName,
-      startDate,
-      endDate,
-      assignedUser,
-      priority,
-      description,
+      content: description,
     };
-    console.log('Form submitted:', formData);
-
-    // You can call `onAddTask` if needed, passing only relevant fields
-    onAddTask({ title: taskTitle, projectName, content: description });
+    onAddTask(formData);
   };
 
   return (
@@ -67,38 +44,6 @@ const CreateTask: React.FC<CreateTaskProps> = ({ onAddTask }) => {
         value={projectName}
         onChange={setProjectName}
         placeholder="Select Project"
-      />
-
-      {/* Start Date Input */}
-      <Input
-        type="date"
-        value={startDate}
-        placeholder="Start Date"
-        onChange={(e) => setStartDate(e.target.value)}
-      />
-
-      {/* End Date Input */}
-      <Input
-        type="date"
-        value={endDate}
-        placeholder="End Date"
-        onChange={(e) => setEndDate(e.target.value)}
-      />
-
-      {/* Assign User Select */}
-      <SelectList
-        options={userOptions}
-        value={assignedUser}
-        onChange={setAssignedUser}
-        placeholder="Assign User"
-      />
-
-      {/* Priority Select */}
-      <SelectList
-        options={priorityOptions}
-        value={priority}
-        onChange={setPriority}
-        placeholder="Select Priority"
       />
 
       {/* Task Description Input (Textarea) */}
