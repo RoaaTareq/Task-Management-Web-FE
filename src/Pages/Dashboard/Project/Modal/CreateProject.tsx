@@ -13,22 +13,27 @@ const CreateProject: React.FC<CreateProjectProps> = ({ addProject }) => {
   const [assignedUsers, setAssignedUsers] = useState<string[]>([]);
   const [category, setCategory] = useState('');
   const [description, setDescription] = useState('');
-  const [error, setError] = useState<string | null>(null);  // For handling error messages
+  const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
 
-    // Validation: Check if any field is empty
     if (!name || !assignedUsers.length || !category || !description) {
       setError('All fields are required.');
       return;
     }
 
-    // If validation passes, create the new project
-    const newProject = { name, assignedUsers, category, description };
+    // Generate a unique ID for the new project (e.g., using a timestamp)
+    const newProject = {
+      id: Date.now().toString(), // Replace with your preferred ID generation logic
+      name,
+      assignedUsers,
+      category,
+      description,
+    };
+
     addProject(newProject);
 
-    // Clear the form and any error messages
     setName('');
     setAssignedUsers([]);
     setCategory('');
@@ -50,7 +55,7 @@ const CreateProject: React.FC<CreateProjectProps> = ({ addProject }) => {
   return (
     <div>
       <form onSubmit={handleSubmit} className={styles['Create-form']}>
-        {error && <p className={styles['error-message']}>{error}</p>}  {/* Display error message if validation fails */}
+        {error && <p className={styles['error-message']}>{error}</p>}
 
         <Input
           type="text"

@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import Button from '../../../Components/Buttons/Button';
 import ViewProject from './ViewProject';
+import EditProject from './Modal/EditProject';
 import CreateProject from './Modal/CreateProject';
 
 interface Project {
+  id: string;
   name: string;
   assignedUsers: string[];
   category: string;
@@ -11,17 +13,37 @@ interface Project {
 }
 
 const ProjectList: React.FC = () => {
-  const [projects, setProjects] = useState<Project[]>([]);  // Manage the list of projects
+  const [projects, setProjects] = useState<Project[]>([]);
   const [showCreateProject, setShowCreateProject] = useState(false);
+  const [editingProject, setEditingProject] = useState<Project | null>(null);
 
   const handleAddTaskClick = () => {
     setShowCreateProject(true);
   };
 
-  // Function to add a new project
-  const addProject = (newProject: Project) => {
-    setProjects([...projects, newProject]);
-    setShowCreateProject(false);  // Hide the create project form after submission
+  const addProject = (newProject: { name: string; assignedUsers: string[]; category: string; description: string }) => {
+    // Generate a unique ID for the new project
+    const projectWithId = {
+      id: Date.now().toString(), // Replace with your preferred ID generation logic
+      ...newProject,
+    };
+    setProjects([...projects, projectWithId]);
+    setShowCreateProject(false);
+  };
+
+  const handleEditProject = (project: Project) => {
+    setEditingProject(project);
+  };
+
+  const updateProject = (updatedProject: Project) => {
+    setProjects(projects.map(project =>
+      project.id === updatedProject.id ? updatedProject : project
+    ));
+    setEditingProject(null);
+  };
+
+  const handleDeleteProject = (id: string) => {
+    setProjects(projects.filter(project => project.id !== id));
   };
 
   return (
@@ -37,9 +59,15 @@ const ProjectList: React.FC = () => {
           />
         </div>
         {showCreateProject ? (
-          <CreateProject addProject={addProject} />  
+          <CreateProject addProject={addProject} />
+        ) : editingProject ? (
+          <EditProject addProject={updateProject} project={editingProject} />
         ) : (
-          <ViewProject projects={projects} />  
+          <ViewProject
+            projects={projects}
+            onEdit={handleEditProject}
+            onDelete={handleDeleteProject}
+          />
         )}
       </div>
     </section>

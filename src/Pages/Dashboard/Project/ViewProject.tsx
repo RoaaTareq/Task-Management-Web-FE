@@ -1,19 +1,14 @@
 import React from 'react';
 import Card from '../../../Components/Cards/Card'; // Adjust the path as needed
+import EditProject from './Modal/EditProject'; // Import the EditProject component
 
 interface ViewProjectProps {
   projects: any[]; // List of projects
+  onEdit: (project: any) => void; // Callback function for editing
+  onDelete: (id: string) => void; // Callback function for deleting
 }
 
-const handleEdit = () => {
-  console.log('Edit clicked');
-};
-
-const handleDelete = () => {
-  console.log('Delete clicked');
-};
-
-const ViewProject: React.FC<ViewProjectProps> = ({ projects }) => {
+const ViewProject: React.FC<ViewProjectProps> = ({ projects, onEdit, onDelete }) => {
   return (
     <section>
       <div className="container">
@@ -30,8 +25,8 @@ const ViewProject: React.FC<ViewProjectProps> = ({ projects }) => {
                   title={project.name}
                   content={project.description}
                   projectName={project.category}
-                  onEdit={handleEdit}
-                  onDelete={handleDelete}
+                  onEdit={() => onEdit(project)}  // Pass the project to the onEdit callback
+                  onDelete={() => onDelete(project.id)}  // Pass the project ID to the onDelete callback
                 />
               </div>
             ))}
