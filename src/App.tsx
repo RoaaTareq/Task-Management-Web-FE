@@ -5,14 +5,16 @@ import MobileNavBar from './Pages/MobileNavBar';
 import Home from './Pages/Home';
 import Login from './Pages/Login';
 import Register from './Pages/Register';
+import Logout from './Pages/Logout'
 import './App.css'; // Import your CSS file
 import Dashboard from './Pages/Dashboard/Dashboard';
+import AuthProvider from './Context/AuthContext'; // Import AuthProvider
 
 function App() {
   return (
-    <Router>
-      <div>
-        <div className="main-navbar">
+    <AuthProvider>
+      <Router>
+      <div className="main-navbar">
           <MainNavbar />
         </div>
         <div className="mobile-navbar">
@@ -22,10 +24,11 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/logout" element={<Logout />} />
           <Route path="/*" element={<Dashboard />} />
         </Routes>
-      </div>
-    </Router>
+      </Router>
+    </AuthProvider>
   );
 }
 

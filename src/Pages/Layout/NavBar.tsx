@@ -1,22 +1,29 @@
-// App.tsx or any other component where you want to use Navbar
-import React from 'react';
+import React, { useContext } from 'react';
 import Navbar from '../../Components/Layout/NavBar'; // Adjust the path as necessary
+import { AuthContext } from '../../Context/AuthContext'; // Import the AuthContext
 
 const MainNavbar: React.FC = () => {
-  const links = [
-    { href: '/', text: 'Home' },
-    { href: '/login', text: 'Login' },
-    { href: '/register', text: 'Register' }
-  ];
+  const { isAuthenticated, logout } = useContext(AuthContext);
+
+  // Conditionally render links based on authentication status
+  const links = isAuthenticated
+    ? [
+        { href: '/', text: 'Home' },
+        { href: '/logout', text: 'Logout', onClick: logout },  // Logout link calls the logout function
+      ]
+    : [
+        { href: '/', text: 'Home' },
+        { href: '/login', text: 'Login' },
+        { href: '/register', text: 'Register' },
+      ];
 
   return (
-   <div>
+    <div>
       <Navbar
-        brandName="Task Mangament Tracker"
+        brandName="Task Management Tracker"
         links={links}
-        className="custom-navbar-class" 
+        className="custom-navbar-class"
       />
-     
     </div>
   );
 };
