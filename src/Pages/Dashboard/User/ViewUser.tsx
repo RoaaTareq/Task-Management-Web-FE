@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Card from '../../../Components/Cards/Card';
+import { getNonAdminUsers } from '../../../services/userService'; // Adjust the path as necessary
 
 interface User {
   id: string;
@@ -24,11 +25,7 @@ const ViewList: React.FC = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await fetch('/api/users'); // Adjust the API endpoint as needed
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        const data = await response.json();
+        const data = await getNonAdminUsers();
         setUsers(data);
       } catch (error) {
         setError('Error fetching users. Please try again later.');
@@ -40,9 +37,6 @@ const ViewList: React.FC = () => {
     fetchUsers();
   }, []);
 
-  // Filter out users who are not admins
-  const nonAdminUsers = users.filter(user => !user.is_admin);
-
   if (loading) {
     return <p>Loading...</p>;
   }
@@ -51,7 +45,7 @@ const ViewList: React.FC = () => {
     return <p>{error}</p>;
   }
 
-  if (nonAdminUsers.length === 0) {
+  if (users.length === 0) {
     return <p>No users found until now</p>;
   }
 
@@ -59,7 +53,7 @@ const ViewList: React.FC = () => {
     <section>
       <div className="container">
         <div className="row">
-          {nonAdminUsers.map(user => (
+          {users.map(user => (
             <div key={user.id} className="col-xl-3 col-lg-3 col-md-4 col-sm-12 col-xs-12">
               <Card
                 title={user.name}
