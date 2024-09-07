@@ -61,9 +61,11 @@ const ProjectList: React.FC = () => {
           />
         </div>
         {showCreateProject ? (
-          <CreateProject addProject={addProject} />
+         <CreateProject addProject={addProject} onClose={() => setShowCreateProject(false)} />
+
         ) : editingProject ? (
-          <EditProject addProject={updateProject} project={editingProject} />
+          <EditProject addProject={updateProject} project={editingProject} onClose={() => setEditingProject(null)} />
+
         ) : (
           <ViewProject
             projects={projects}

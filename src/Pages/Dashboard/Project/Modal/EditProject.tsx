@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import styles from '../CSS/Project.module.scss';
 import Button from '../../../../Components/Buttons/Button';
 import Input from '../../../../Components/Inputs/Input';
@@ -7,14 +7,17 @@ import SelectList from '../../../../Components/DropDownList/SelectList';
 interface EditProjectProps {
   addProject: (updatedProject: { id: string; name: string; assignedUsers: string[]; category: string; description: string }) => void;
   project: { id: string; name: string; assignedUsers: string[]; category: string; description: string };
+  onClose: () => void; // Add an onClose prop to handle closing the form
 }
 
-const EditProject: React.FC<EditProjectProps> = ({ addProject, project }) => {
+const EditProject: React.FC<EditProjectProps> = ({ addProject, project, onClose }) => {
   const [name, setName] = useState(project.name);
   const [assignedUsers, setAssignedUsers] = useState<string[]>(project.assignedUsers);
   const [category, setCategory] = useState(project.category);
   const [description, setDescription] = useState(project.description);
   const [error, setError] = useState<string | null>(null);
+
+  const formRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setName(project.name);
@@ -22,6 +25,19 @@ const EditProject: React.FC<EditProjectProps> = ({ addProject, project }) => {
     setCategory(project.category);
     setDescription(project.description);
   }, [project]);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (formRef.current && !formRef.current.contains(event.target as Node)) {
+        onClose(); // Call the onClose function if clicked outside
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [onClose]);
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
@@ -49,7 +65,7 @@ const EditProject: React.FC<EditProjectProps> = ({ addProject, project }) => {
   ];
 
   return (
-    <div>
+    <div ref={formRef}>
       <form onSubmit={handleSubmit} className={styles['Create-form']}>
         {error && <p className={styles['error-message']}>{error}</p>}
 
@@ -84,7 +100,7 @@ const EditProject: React.FC<EditProjectProps> = ({ addProject, project }) => {
         />
 
         <Button label="Update Project" type="submit" styleType="primary" />
-        <Button label="Cancel" type="button" styleType="secondary" className="mt-4" />
+        <Button label="Cancel" type="button" styleType="secondary" className="mt-4" onClick={onClose} />
       </form>
     </div>
   );

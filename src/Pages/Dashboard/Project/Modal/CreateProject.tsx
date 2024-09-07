@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import styles from '../CSS/Project.module.scss';
 import Button from '../../../../Components/Buttons/Button';
 import Input from '../../../../Components/Inputs/Input';
@@ -6,14 +6,30 @@ import SelectList from '../../../../Components/DropDownList/SelectList';
 
 interface CreateProjectProps {
   addProject: (newProject: { name: string; assignedUsers: string[]; category: string; description: string }) => void;
+  onClose: () => void; // Add an onClose prop to handle closing the form
 }
 
-const CreateProject: React.FC<CreateProjectProps> = ({ addProject }) => {
+const CreateProject: React.FC<CreateProjectProps> = ({ addProject, onClose }) => {
   const [name, setName] = useState('');
   const [assignedUsers, setAssignedUsers] = useState<string[]>([]);
   const [category, setCategory] = useState('');
   const [description, setDescription] = useState('');
   const [error, setError] = useState<string | null>(null);
+
+  const formRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (formRef.current && !formRef.current.contains(event.target as Node)) {
+        onClose(); // Call the onClose function if clicked outside
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [onClose]);
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
@@ -53,7 +69,7 @@ const CreateProject: React.FC<CreateProjectProps> = ({ addProject }) => {
   ];
 
   return (
-    <div>
+    <div ref={formRef}>
       <form onSubmit={handleSubmit} className={styles['Create-form']}>
         {error && <p className={styles['error-message']}>{error}</p>}
 
@@ -88,7 +104,7 @@ const CreateProject: React.FC<CreateProjectProps> = ({ addProject }) => {
         />
 
         <Button label="Add Project" type="submit" styleType="primary" />
-        <Button label="Cancel" type="button" styleType="secondary" className="mt-4" />
+        <Button label="Cancel" type="button" styleType="secondary" className="mt-4" onClick={onClose} />
       </form>
     </div>
   );
