@@ -13,11 +13,27 @@ const CreateProject: React.FC<CreateProjectProps> = ({ addProject }) => {
   const [assignedUsers, setAssignedUsers] = useState<string[]>([]);
   const [category, setCategory] = useState('');
   const [description, setDescription] = useState('');
+  const [error, setError] = useState<string | null>(null);  // For handling error messages
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
+
+    // Validation: Check if any field is empty
+    if (!name || !assignedUsers.length || !category || !description) {
+      setError('All fields are required.');
+      return;
+    }
+
+    // If validation passes, create the new project
     const newProject = { name, assignedUsers, category, description };
-    addProject(newProject);  // Pass new project back to parent
+    addProject(newProject);
+
+    // Clear the form and any error messages
+    setName('');
+    setAssignedUsers([]);
+    setCategory('');
+    setDescription('');
+    setError(null);
   };
 
   const userOptions = [
@@ -34,6 +50,8 @@ const CreateProject: React.FC<CreateProjectProps> = ({ addProject }) => {
   return (
     <div>
       <form onSubmit={handleSubmit} className={styles['Create-form']}>
+        {error && <p className={styles['error-message']}>{error}</p>}  {/* Display error message if validation fails */}
+
         <Input
           type="text"
           value={name}
