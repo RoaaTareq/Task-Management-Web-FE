@@ -23,6 +23,21 @@ interface AuthResponse {
     };
 }
 
+interface Credentials {
+    email: string;
+    password: string;
+}
+
+interface AuthResponse {
+    token: string;
+    user: {
+        id: number;
+        name: string;
+        email: string;
+    };
+}
+
+
 // Register a new user
 export const register = async (userData: UserData): Promise<AuthResponse> => {
     const response: AxiosResponse<AuthResponse> = await axios.post(API_URL + 'register', userData);
