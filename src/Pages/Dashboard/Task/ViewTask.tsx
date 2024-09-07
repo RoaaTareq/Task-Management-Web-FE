@@ -1,42 +1,36 @@
-import React from "react";
-import Card from "../../../Components/Cards/Card"; // Adjust the path as needed
+import React from 'react';
+import Card from '../../../Components/Cards/Card'; // Adjust the path as needed
 
-const handleEdit = () => {
-    console.log("Edit clicked");
-};
+interface Task {
+  title: string;
+  projectName: string;
+  content: string;
+}
 
-const handleDelete = () => {
-    console.log("Delete clicked");
-};
+interface ViewTaskProps {
+  tasks: Task[];
+}
 
-const ViewTask = () => {
-    return (
-        <section>
-            <div className="container">
-                <div className="row">
-                    <div className="col-xl-3 col-lg-3 col-md-4 col-sm-12 col-xs-12">
-                        <Card title="Task Title" content="This is the content of the card." projectName="Project A" onEdit={handleEdit} onDelete={handleDelete} />
-                    </div>
-                    
-                    <div className="col-xl-3 col-lg-3 col-md-4 col-sm-12 col-xs-12">
-                        <Card title="Task Title" content="This is the content of the card." projectName="Project A" onEdit={handleEdit} onDelete={handleDelete} />
-                    </div>
-                    <div className="col-xl-3 col-lg-3 col-md-4 col-sm-12 col-xs-12">
-                        <Card title="Task Title" content="This is the content of the card." projectName="Project A" onEdit={handleEdit} onDelete={handleDelete} />
-                    </div>
-                    <div className="col-xl-3 col-lg-3 col-md-4 col-sm-12 col-xs-12">
-                        <Card title="Task Title" content="This is the content of the card." projectName="Project A" onEdit={handleEdit} onDelete={handleDelete} />
-                    </div>
-                    <div className="col-xl-3 col-lg-3 col-md-4 col-sm-12 col-xs-12">
-                        <Card title="Task Title" content="This is the content of the card." projectName="Project A" onEdit={handleEdit} onDelete={handleDelete} />
-                    </div>
-                    
-                    
-
-                </div>
+const ViewTask: React.FC<ViewTaskProps> = ({ tasks }) => {
+  return (
+    <section>
+      <div className="container">
+        <div className="row">
+          {tasks.map((task, index) => (
+            <div key={index} className="col-xl-3 col-lg-3 col-md-4 col-sm-12 col-xs-12">
+              <Card
+                title={task.title}
+                content={task.content}
+                projectName={task.projectName}
+                onEdit={() => console.log(`Edit ${task.title}`)}
+                onDelete={() => console.log(`Delete ${task.title}`)}
+              />
             </div>
-        </section>
-    );
+          ))}
+        </div>
+      </div>
+    </section>
+  );
 };
 
 export default ViewTask;
