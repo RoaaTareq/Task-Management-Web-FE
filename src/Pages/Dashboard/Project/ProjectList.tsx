@@ -3,6 +3,7 @@ import Button from '../../../Components/Buttons/Button';
 import ViewProject from './ViewProject';
 import EditProject from './Modal/EditProject';
 import CreateProject from './Modal/CreateProject';
+import styles from './CSS/Project.module.scss'
 
 interface Project {
   id: string;
@@ -49,12 +50,13 @@ const ProjectList: React.FC = () => {
   return (
     <section>
       <div className="container">
-        <div className="d-flex justify-content-between">
-          <h1>Task</h1>
+        <div className="d-flex justify-content-between mt-5">
+          <h1>Project</h1>
           <Button
-            label="Add Task +"
+            label="Add Project +"
             type="button"
             styleType="primary"
+            className={styles.btnOpen}
             onClick={handleAddTaskClick}
           />
         </div>
