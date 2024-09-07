@@ -10,7 +10,9 @@
 .btnOpen{
     width: 200px;
 }
-
+.error-message{
+  color:red
+}
 @media (min-width: 768px) {
     .Create-form {
       max-width: 500px; // Slightly larger form on tablets and up

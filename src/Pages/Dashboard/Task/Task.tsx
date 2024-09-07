@@ -45,6 +45,9 @@ const TaskList: React.FC = () => {
     setTasks((prevTasks) => [...prevTasks, { ...task, id: tasks.length + 1 }]);
     setShowCreateTask(false);
   };
+  const handleCloseForm = () => {
+    setShowCreateTask(false); // Hide form when cancel or outside click
+  };
 
   const handleEditTask = (taskId: number, updatedTask: Task) => {
     setTasks((prevTasks) =>
@@ -73,7 +76,7 @@ const TaskList: React.FC = () => {
 
         {showCreateTask && (
           <div ref={createTaskRef} className="create-task-form">
-            <CreateTask onAddTask={handleAddTask} />
+            <CreateTask onAddTask={handleAddTask} onClose={handleCloseForm} />
           </div>
         )}
 

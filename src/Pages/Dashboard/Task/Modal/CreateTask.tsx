@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import Input from '../../../../Components/Inputs/Input';
 import SelectList from '../../../../Components/DropDownList/SelectList';
 import Button from '../../../../Components/Buttons/Button';
@@ -6,13 +6,16 @@ import styles from '../CSS/Task.module.scss'; // Import CSS Module styles
 
 interface CreateTaskProps {
   onAddTask: (task: { title: string; projectName: string; content: string }) => void;
+  onClose: () => void; // Ensure onClose is required
 }
 
-const CreateTask: React.FC<CreateTaskProps> = ({ onAddTask }) => {
-  // State management for form fields
+const CreateTask: React.FC<CreateTaskProps> = ({ onAddTask, onClose }) => {
+  // State management for form fields and visibility
   const [taskTitle, setTaskTitle] = useState('');
   const [projectName, setProjectName] = useState('');
   const [description, setDescription] = useState('');
+  const [error, setError] = useState('');
+  const formRef = useRef<HTMLFormElement>(null);
 
   // Example options for dropdown lists
   const projectOptions = [
@@ -22,40 +25,66 @@ const CreateTask: React.FC<CreateTaskProps> = ({ onAddTask }) => {
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
+
+    // Validate form fields
+    if (!taskTitle || !projectName || !description) {
+      setError('All fields are required.');
+      return;
+    }
+
+    setError('');
     const formData = {
       title: taskTitle,
       projectName,
       content: description,
     };
     onAddTask(formData);
+    onClose(); // Close form after adding task
   };
 
+  // Handle clicks outside the form
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (formRef.current && !formRef.current.contains(event.target as Node)) {
+        onClose();
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [onClose]);
+
   return (
-    <form onSubmit={handleSubmit} className={styles['Create-form']}>
-      <Input
-        value={taskTitle}
-        placeholder="Task Title"
-        onChange={(e) => setTaskTitle(e.target.value)}
-      />
+    <div className={styles['Create-task-container']}>
+      <form onSubmit={handleSubmit} className={styles['Create-form']} ref={formRef}>
+        {error && <p className={styles['error-message']}>{error}</p>}
 
-      {/* Project Name Select */}
-      <SelectList
-        options={projectOptions}
-        value={projectName}
-        onChange={setProjectName}
-        placeholder="Select Project"
-      />
+        <Input
+          value={taskTitle}
+          placeholder="Task Title"
+          onChange={(e) => setTaskTitle(e.target.value)}
+        />
 
-      {/* Task Description Input (Textarea) */}
-      <Input
-        type="textarea"
-        value={description}
-        placeholder="Task Description"
-        onChange={(e) => setDescription(e.target.value)}
-      />
-      
-      <Button label="Add Task" type="submit" styleType="primary" />
-    </form>
+        {/* Project Name Select */}
+        <SelectList
+          options={projectOptions}
+          value={projectName}
+          onChange={setProjectName}
+          placeholder="Select Project"
+        />
+
+        {/* Task Description Input (Textarea) */}
+        <Input
+          type="textarea"
+          value={description}
+          placeholder="Task Description"
+          onChange={(e) => setDescription(e.target.value)}
+        />
+        
+        <Button label="Add Task" type="submit" styleType="primary" />
+        <Button label="Cancel" type="button" styleType="secondary" onClick={onClose} />
+      </form>
+    </div>
   );
 };
 
