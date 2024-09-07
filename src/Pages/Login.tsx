@@ -2,18 +2,37 @@ import React, { useState } from 'react';
 import Input from '../Components/Inputs/Input';
 import Button from '../Components/Buttons/Button';
 import styles from './Login.module.scss';  // Import the CSS module
+import { login } from '../services/authService';  // Import login function from your service
 
 const Login: React.FC = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
 
-  const handleLogin = (event: React.FormEvent) => {
+  const handleLogin = async (event: React.FormEvent) => {
     event.preventDefault();
-    console.log({ email, password });
-    
-    // Reset form after submission
-    setEmail('');
-    setPassword('');
+    setError(null);
+    setSuccess(null);
+
+    try {
+      // Call the login service function
+      const response = await login({ email, password });
+      
+      // If successful, set success message
+      setSuccess('Login successful');
+      
+      // Optional: Redirect to dashboard or another page
+      window.location.href = "/task";
+      
+      // Reset form fields
+      setEmail('');
+      setPassword('');
+      
+    } catch (error: any) {
+      // If error occurs during login, set error message
+      setError('Login failed. Please check your credentials.');
+    }
   };
 
   return (
@@ -41,6 +60,8 @@ const Login: React.FC = () => {
                 type="submit"
                 styleType="primary"
               />
+              {error && <p className={styles['error-message']}>{error}</p>}
+              {success && <p className={styles['success-message']}>{success}</p>}
             </form>
           </div>
         </div>

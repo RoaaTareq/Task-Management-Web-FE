@@ -23,7 +23,7 @@ const Register: React.FC = () => {
         name: username,
         email,
         password,
-        password_confirmation: password,
+      
       });
       setSuccess('Registration successful');
       setUsername('');

@@ -1,36 +1,48 @@
-// src/services/authService.ts
+import axios, { AxiosResponse } from 'axios';
 
-import axios from '../utils/axios';
+const API_URL = 'http://127.0.0.1:8000/api/';
 
-interface RegisterData {
+// Define interfaces for user data and credentials
+interface UserData {
     name: string;
     email: string;
     password: string;
-    password_confirmation: string;
 }
 
-interface LoginData {
+interface Credentials {
     email: string;
     password: string;
 }
 
 interface AuthResponse {
     token: string;
+    user: {
+        id: number;
+        name: string;
+        email: string;
+    };
 }
 
-export const register = async (userData: RegisterData): Promise<void> => {
-    try {
-        await axios.post('/register', userData);
-    } catch (error: any) {
-        throw error.response.data;
-    }
+// Register a new user
+export const register = async (userData: UserData): Promise<AuthResponse> => {
+    const response: AxiosResponse<AuthResponse> = await axios.post(API_URL + 'register', userData);
+    return response.data;
 };
 
-export const login = async (credentials: LoginData): Promise<AuthResponse> => {
-    try {
-        const response = await axios.post<AuthResponse>('/login', credentials);
-        return response.data;
-    } catch (error: any) {
-        throw error.response.data;
-    }
+// Login and store token in localStorage
+export const login = async (credentials: Credentials): Promise<AuthResponse> => {
+    const response: AxiosResponse<AuthResponse> = await axios.post(API_URL + 'login', credentials);
+    localStorage.setItem('token', response.data.token);
+    return response.data;
+};
+
+// Logout by removing the token from localStorage
+export const logout = (): void => {
+    localStorage.removeItem('token');
+};
+
+// Get the Authorization header with the stored token
+export const getAuthHeader = (): { Authorization: string } => {
+    const token = localStorage.getItem('token');
+    return { Authorization: 'Bearer ' + (token || '') };
 };
