@@ -5,7 +5,14 @@ import Button from '../../../../Components/Buttons/Button';
 import styles from '../CSS/Task.module.scss'; // Import CSS Module styles
 
 interface CreateTaskProps {
-  onAddTask: (task: { title: string; projectName: string; content: string }) => void;
+  onAddTask: (task: {
+    title: string;
+    projectName: string;
+    content: string;
+    priority: string;
+    startTime: string;
+    endTime: string;
+  }) => void;
   onClose: () => void; // Ensure onClose is required
 }
 
@@ -14,6 +21,9 @@ const CreateTask: React.FC<CreateTaskProps> = ({ onAddTask, onClose }) => {
   const [taskTitle, setTaskTitle] = useState('');
   const [projectName, setProjectName] = useState('');
   const [description, setDescription] = useState('');
+  const [priority, setPriority] = useState('');
+  const [startTime, setStartTime] = useState('');
+  const [endTime, setEndTime] = useState('');
   const [error, setError] = useState('');
   const formRef = useRef<HTMLFormElement>(null);
 
@@ -23,11 +33,17 @@ const CreateTask: React.FC<CreateTaskProps> = ({ onAddTask, onClose }) => {
     { value: 'project2', label: 'Project 2' },
   ];
 
+  const priorityOptions = [
+    { value: 'low', label: 'Low' },
+    { value: 'medium', label: 'Medium' },
+    { value: 'high', label: 'High' },
+  ];
+
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
 
     // Validate form fields
-    if (!taskTitle || !projectName || !description) {
+    if (!taskTitle || !projectName || !description || !priority || !startTime || !endTime) {
       setError('All fields are required.');
       return;
     }
@@ -37,6 +53,9 @@ const CreateTask: React.FC<CreateTaskProps> = ({ onAddTask, onClose }) => {
       title: taskTitle,
       projectName,
       content: description,
+      priority,
+      startTime,
+      endTime,
     };
     onAddTask(formData);
     onClose(); // Close form after adding task
@@ -65,7 +84,6 @@ const CreateTask: React.FC<CreateTaskProps> = ({ onAddTask, onClose }) => {
           onChange={(e) => setTaskTitle(e.target.value)}
         />
 
-        {/* Project Name Select */}
         <SelectList
           options={projectOptions}
           value={projectName}
@@ -73,12 +91,30 @@ const CreateTask: React.FC<CreateTaskProps> = ({ onAddTask, onClose }) => {
           placeholder="Select Project"
         />
 
-        {/* Task Description Input (Textarea) */}
         <Input
           type="textarea"
           value={description}
           placeholder="Task Description"
           onChange={(e) => setDescription(e.target.value)}
+        />
+
+        <SelectList
+          options={priorityOptions}
+          value={priority}
+          onChange={setPriority}
+          placeholder="Select Priority"
+        />
+
+        <Input
+          type="date"
+          value={startTime}
+          onChange={(e) => setStartTime(e.target.value)}
+        />
+
+        <Input
+          type="date"
+          value={endTime}
+          onChange={(e) => setEndTime(e.target.value)}
         />
         
         <Button label="Add Task" type="submit" styleType="primary" />
