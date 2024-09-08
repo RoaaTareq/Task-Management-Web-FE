@@ -1,54 +1,13 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-@font-face {
-  font-family: 'Nunito Sans';
-  src: url('/public/assets/fonts/NunitoSans-VariableFont_YTLC\,opsz\,wdth\,wght.ttf') format('truetype') !important; /* Correct format for .ttf */
-  font-weight: normal;
-  font-style: normal;
-}
-
 body {
-  font-family: 'Nunito Sans', sans-serif !important; /* Use the correct font-family */
-}
-.Home-section{
-  background: url(../src/images/white-wave-bg.svg) center bottom -0.5px / 100% 14% no-repeat scroll padding-box border-box, linear-gradient(60deg, rgb(82, 67, 170), rgb(237, 80, 180)) 0% 0% / auto repeat scroll padding-box border-box rgb(82, 67, 170);
-        background-blend-mode: normal, normal;
-        color: rgb(255, 255, 255);
-        padding: 50px ;
-}
-
-.media-img{
-  width: 100%;
-}
-/* App.css */
-.main-navbar {
-  display: block;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-.mobile-navbar {
-  display: none;
-}
-
-@media (max-width: 767px) {
-  .main-navbar {
-    display: none;
-  }
-
-  .mobile-navbar {
-    display: block;
-  }
-}
-
-@media (min-width: 768px) {
-  .main-navbar {
-    display: block;
-  }
-
-  .mobile-navbar {
-    display: none;
-  }
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
 }
