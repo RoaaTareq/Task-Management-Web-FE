@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Input from '../../Components/Inputs/Input';
 import Button from '../../Components/Buttons/Button';
 import styles from './CSS/Auth.module.scss';  
@@ -10,6 +10,7 @@ const Login: React.FC = () => {
   const [password, setPassword] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | null>(null);
 
   const handleLogin = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -32,6 +33,21 @@ const Login: React.FC = () => {
       setError(errorMessage);
     }
   };
+
+  useEffect(() => {
+    if (error) {
+      // Set a timeout to clear the error after 5 seconds
+      const id = setTimeout(() => setError(null), 3000);
+      setTimeoutId(id);
+    }
+
+    // Cleanup the timeout if the component unmounts or if the error changes
+    return () => {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+    };
+  }, [error, timeoutId]);
 
   return (
     <section>

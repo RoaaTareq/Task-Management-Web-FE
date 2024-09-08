@@ -1,6 +1,4 @@
-// src/components/Register.tsx
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Input from '../../Components/Inputs/Input';  // Import your custom Input component
 import Button from '../../Components/Buttons/Button';  // Import your custom Button component
 import styles from './CSS/Auth.module.scss';  // Import your CSS module
@@ -12,7 +10,6 @@ const Register: React.FC = () => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
-
   const [success, setSuccess] = useState<string | null>(null);
 
   const handleSubmit = async (event: React.FormEvent) => {
@@ -39,7 +36,22 @@ const Register: React.FC = () => {
       }
     }
   };
-  
+
+  useEffect(() => {
+    if (error) {
+      console.log('Setting up timeout for error message');
+      const id = setTimeout(() => {
+       
+        setError(null);
+      }, 3000);
+      
+      // Cleanup timeout if the error changes or component unmounts
+      return () => {
+        console.log('Clearing timeout');
+        clearTimeout(id);
+      };
+    }
+  }, [error]);
 
   return (
     <section>
@@ -78,7 +90,7 @@ const Register: React.FC = () => {
             </form>
           </div>
           <div>
-          <img src={Left} alt="" className='w-100 m-auto' />
+            <img src={Left} alt="" className='w-100 m-auto' />
           </div>
         </div>
       </div>
