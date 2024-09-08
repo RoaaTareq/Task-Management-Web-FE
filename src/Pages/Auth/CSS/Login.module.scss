@@ -1,0 +1,22 @@
+   
+  button {
+    width: 65%;  // Make button full width
+    padding: 10px;
+  }
+  .login-page{
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+     width:700px;
+     margin:50px  auto;
+    padding: 80px;
+    background-color: rgb(250, 251, 252);
+    
+  }
+
+@media only screen and (max-width: 786px) {
+  .login-page{
+    width: 100%;
+    padding: 40px;
+    flex-direction: column;
+  }
+}

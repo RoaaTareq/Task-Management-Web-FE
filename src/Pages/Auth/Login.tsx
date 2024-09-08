@@ -1,52 +1,44 @@
-// src/components/Register.tsx
-
 import React, { useState } from 'react';
-import Input from '../Components/Inputs/Input';  // Import your custom Input component
-import Button from '../Components/Buttons/Button';  // Import your custom Button component
-import styles from './Register.module.scss';  // Import your CSS module
-import { register } from '../services/authService';  // Import the register function from your service
+import Input from '../../Components/Inputs/Input';
+import Button from '../../Components/Buttons/Button';
+import styles from './CSS/Login.module.scss';  
+import { login } from '../../services/authService';  
+import Left from '../../../src/images/left.svg';
 
-const Register: React.FC = () => {
-  const [username, setUsername] = useState<string>('');
+const Login: React.FC = () => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
-  const handleSubmit = async (event: React.FormEvent) => {
+  const handleLogin = async (event: React.FormEvent) => {
     event.preventDefault();
     setError(null);
     setSuccess(null);
 
+    if (!email || !password) {
+      setError('Please enter both email and password.');
+      return;
+    }
+
     try {
-      await register({
-        name: username,
-        email,
-        password,
-      
-      });
-      setSuccess('Registration successful');
-      setUsername('');
+      const response = await login({ email, password });
+      setSuccess('Login successful');
+      window.location.href = "/task";
       setEmail('');
       setPassword('');
     } catch (error: any) {
-      setError('Registration failed');
+      const errorMessage = error.response?.data?.message || 'Login failed. Please check your credentials.';
+      setError(errorMessage);
     }
   };
 
   return (
     <section>
       <div className="container">
-        <div className="d-flex justify-content-center">
+        <div className={`d-flex justify-content-center align-items-center ${styles['login-page']}`}>
           <div>
-            <form onSubmit={handleSubmit} className={styles['form-container']}>
-              <Input
-                type="text"
-                value={username}
-                placeholder="Username"
-                onChange={(e) => setUsername(e.target.value)}
-                className="custom-input"
-              />
+            <form onSubmit={handleLogin} className={styles['form-container']}>
               <Input
                 type="email"
                 value={email}
@@ -62,13 +54,16 @@ const Register: React.FC = () => {
                 className="custom-input"
               />
               <Button
-                label="Register"
+                label="Login"
                 type="submit"
                 styleType="primary"
               />
-              {success && <p className={styles['success-message']}>{success}</p>}
               {error && <p className={styles['error-message']}>{error}</p>}
+              {success && <p className={styles['success-message']}>{success}</p>}
             </form>
+          </div>
+          <div>
+            <img src={Left} alt="" className='w-100 m-auto' />
           </div>
         </div>
       </div>
@@ -76,4 +71,4 @@ const Register: React.FC = () => {
   );
 };
 
-export default Register;
+export default Login;

@@ -14,7 +14,16 @@
 body {
   font-family: 'Nunito Sans', sans-serif !important; /* Use the correct font-family */
 }
+.Home-section{
+  background: url(../src/images/white-wave-bg.svg) center bottom -0.5px / 100% 14% no-repeat scroll padding-box border-box, linear-gradient(60deg, rgb(82, 67, 170), rgb(237, 80, 180)) 0% 0% / auto repeat scroll padding-box border-box rgb(82, 67, 170);
+        background-blend-mode: normal, normal;
+        color: rgb(255, 255, 255);
+        padding: 50px ;
+}
 
+.media-img{
+  width: 100%;
+}
 /* App.css */
 .main-navbar {
   display: block;
