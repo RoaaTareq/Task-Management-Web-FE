@@ -52,15 +52,14 @@ const ViewList: React.FC = () => {
   return (
     <section>
       <div className="container">
-        <div className="row">
+        <div className="row p-0">
           {users.map(user => (
-            <div key={user.id} className="col-xl-3 col-lg-3 col-md-4 col-sm-12 col-xs-12">
+            <div key={user.id} className="p-0 col-xl-3 col-lg-3 col-md-4 col-sm-12 col-xs-12">
               <Card
                 title={user.name}
                 content="This is the content of the card."
                 projectName="Project A" // Adjust based on your requirements
-                onEdit={() => handleEdit(user.id)}
-                onDelete={() => handleDelete(user.id)}
+                
               />
             </div>
           ))}

@@ -8,8 +8,12 @@ const MainNavbar: React.FC = () => {
   // Conditionally render links based on authentication status
   const links = isAuthenticated
     ? [
-        { href: '/', text: 'Home' },
-        { href: '/logout', text: 'Logout', onClick: logout },  // Logout link calls the logout function
+        
+        
+        { href: '/tasks', text: 'Create Task' },
+        { href: '/users', text: 'Users' },
+        { href: '/projects', text: 'Create Project' }, 
+        { href: '/logout', text: 'Logout', onClick: logout },   // Logout link calls the logout function
       ]
     : [
         { href: '/', text: 'Home' },
