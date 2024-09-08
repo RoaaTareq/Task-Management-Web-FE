@@ -24,6 +24,17 @@ body {
 .media-img{
   width: 100%;
 }
+.btn-page{
+  border: none;
+  background-color: #007bff;;
+  width: 100px;
+  color: #FFF;
+  border-radius: 12px;
+  margin: 0 4px;
+}
+.disabled{
+  opacity: .04;
+}
 /* App.css */
 .main-navbar {
   display: block;

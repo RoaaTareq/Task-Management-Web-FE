@@ -1,12 +1,14 @@
 import axios from 'axios';
 
-// Define the API URL
 const API_URL = 'http://127.0.0.1:8000/api';
 
-// Define the function to get non-admin users
-export const getNonAdminUsers = async () => {
+export const getNonAdminUsers = async (page: number = 1, perPage: number = 10) => {
   try {
     const response = await axios.get(`${API_URL}/users/non-admins`, {
+      params: {
+        page,
+        per_page: perPage,
+      },
       headers: {
         Authorization: `Bearer ${localStorage.getItem('token')}`,
       },

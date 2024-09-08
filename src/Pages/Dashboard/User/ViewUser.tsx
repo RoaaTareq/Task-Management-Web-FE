@@ -9,33 +9,29 @@ interface User {
   // Add other user properties as needed
 }
 
-const handleEdit = (userId: string) => {
-  console.log(`Edit clicked for user with ID: ${userId}`);
-};
-
-const handleDelete = (userId: string) => {
-  console.log(`Delete clicked for user with ID: ${userId}`);
-};
-
 const ViewList: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [totalPages, setTotalPages] = useState<number>(1);
+
+  const fetchUsers = async (page: number) => {
+    setLoading(true);
+    try {
+      const data = await getNonAdminUsers(page);
+      setUsers(data.data); // Adjust based on the API response structure
+      setTotalPages(data.last_page); // Adjust based on the API response structure
+    } catch (error) {
+      setError('Error fetching users. Please try again later.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const data = await getNonAdminUsers();
-        setUsers(data);
-      } catch (error) {
-        setError('Error fetching users. Please try again later.');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchUsers();
-  }, []);
+    fetchUsers(currentPage);
+  }, [currentPage]);
 
   if (loading) {
     return <p>Loading...</p>;
@@ -59,10 +55,26 @@ const ViewList: React.FC = () => {
                 title={user.name}
                 content="This is the content of the card."
                 projectName="Project A" // Adjust based on your requirements
-                
               />
             </div>
           ))}
+        </div>
+        <div className="pagination d-flex align-items-center">
+          <button
+          className='btn-page'
+            onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+            disabled={currentPage === 1}
+          >
+            Previous
+          </button>
+          <span>Page {currentPage} of {totalPages}</span>
+          <button
+            className='btn-page'
+            onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+            disabled={currentPage === totalPages}
+          >
+            Next
+          </button>
         </div>
       </div>
     </section>
