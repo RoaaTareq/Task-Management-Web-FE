@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import BurgerMenu from '../../Components/Layout/BurgerMenu';
-import styles from './CSS/MobileNavBar.module.scss';
+import styles from './CSS/Auth.module.scss';
 
 const MobileNavBar: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);

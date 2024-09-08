@@ -3,8 +3,9 @@
 import React, { useState } from 'react';
 import Input from '../../Components/Inputs/Input';  // Import your custom Input component
 import Button from '../../Components/Buttons/Button';  // Import your custom Button component
-import styles from './CSS/Register.module.scss';  // Import your CSS module
-import { register } from '../../services/authService';  // Import the register function from your service
+import styles from './CSS/Auth.module.scss';  // Import your CSS module
+import { register } from '../../services/authService'; 
+import Left from '../../../src/images/left.svg'; // Import the register function from your service
 
 const Register: React.FC = () => {
   const [username, setUsername] = useState<string>('');
@@ -37,7 +38,7 @@ const Register: React.FC = () => {
   return (
     <section>
       <div className="container">
-        <div className="d-flex justify-content-center">
+        <div className={`d-flex justify-content-center align-items-center ${styles['login-page']}`}>
           <div>
             <form onSubmit={handleSubmit} className={styles['form-container']}>
               <Input
@@ -69,6 +70,9 @@ const Register: React.FC = () => {
               {success && <p className={styles['success-message']}>{success}</p>}
               {error && <p className={styles['error-message']}>{error}</p>}
             </form>
+          </div>
+          <div>
+          <img src={Left} alt="" className='w-100 m-auto' />
           </div>
         </div>
       </div>
