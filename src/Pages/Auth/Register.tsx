@@ -12,28 +12,34 @@ const Register: React.FC = () => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
+
   const [success, setSuccess] = useState<string | null>(null);
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     setError(null);
     setSuccess(null);
-
+  
     try {
       await register({
         name: username,
         email,
         password,
-      
       });
       setSuccess('Registration successful');
       setUsername('');
       setEmail('');
       setPassword('');
     } catch (error: any) {
-      setError('Registration failed');
+      // Check if error has a response from the API and display the appropriate message
+      if (error.response && error.response.data) {
+        setError(error.response.data.message || 'Registration failed');
+      } else {
+        setError('An unexpected error occurred');
+      }
     }
   };
+  
 
   return (
     <section>

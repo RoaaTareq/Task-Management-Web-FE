@@ -41,7 +41,9 @@ interface AuthResponse {
 // Register a new user
 export const register = async (userData: UserData): Promise<AuthResponse> => {
     const response: AxiosResponse<AuthResponse> = await axios.post(API_URL + 'register', userData);
+    console.log(response.data)
     return response.data;
+   
 };
 
 // Login and store token in localStorage
