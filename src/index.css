@@ -32,8 +32,9 @@ body {
   border-radius: 12px;
   margin: 0 4px;
 }
-.disabled{
-  opacity: .04;
+.pagination .btn-page:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 /* App.css */
 .main-navbar {
