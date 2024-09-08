@@ -1,26 +1,12 @@
 {
   "compilerOptions": {
-    "target": "es5",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
-    "allowJs": true,
-    "skipLibCheck": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "strict": true,
-    "forceConsistentCasingInFileNames": true,
-    "noFallthroughCasesInSwitch": true,
-    "module": "esnext",
+    "jsx": "react-jsx", // or "react-jsxdev" for dev builds
+    "target": "es6", // Adjust target as necessary
+    "module": "esnext", // Optional: choose based on your project
     "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "noEmit": true,
-    "jsx": "react-jsx"
-  },
-  "include": [
-    "src"
-  ]
+    "strict": true, // Recommended for TypeScript projects
+    "esModuleInterop": true, // Ensures compatibility with CommonJS modules
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
+  }
 }
