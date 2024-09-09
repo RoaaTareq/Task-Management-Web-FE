@@ -20,7 +20,7 @@ interface ViewTaskProps {
   setTasks: React.Dispatch<React.SetStateAction<Task[]>>;
 }
 
-const ViewTask: React.FC<ViewTaskProps> = ({ tasks, onEdit, onDelete, setTasks }) => {
+const ViewTask: React.FC<ViewTaskProps> = ({ tasks = [], onEdit, onDelete, setTasks }) => {
   const [filterPriority, setFilterPriority] = useState<string | null>(null); // State for the priority filter
 
   const handleDelete = async (taskId: number) => {
@@ -60,10 +60,12 @@ const ViewTask: React.FC<ViewTaskProps> = ({ tasks, onEdit, onDelete, setTasks }
     }
   };
 
-  // Filter tasks based on the selected priority
-  const filteredTasks = filterPriority
-    ? tasks.filter((task) => task.priority.toLowerCase() === filterPriority.toLowerCase())
-    : tasks;
+  // Ensure tasks is an array
+  const filteredTasks = Array.isArray(tasks)
+    ? filterPriority
+      ? tasks.filter((task) => task.priority.toLowerCase() === filterPriority.toLowerCase())
+      : tasks
+    : [];
 
   return (
     <section>
@@ -73,13 +75,13 @@ const ViewTask: React.FC<ViewTaskProps> = ({ tasks, onEdit, onDelete, setTasks }
           <button onClick={() => setFilterPriority(null)} className={styles['filter-button']}>
             All
           </button>
-          <button onClick={() => setFilterPriority('low')}  className={styles['filter-button']}>
+          <button onClick={() => setFilterPriority('low')} className={styles['filter-button']}>
             Low
           </button>
           <button onClick={() => setFilterPriority('medium')} className={styles['filter-button']}>
             Medium
           </button>
-          <button onClick={() => setFilterPriority('high')}  className={styles['filter-button']}>
+          <button onClick={() => setFilterPriority('high')} className={styles['filter-button']}>
             High
           </button>
         </div>
@@ -110,5 +112,6 @@ const ViewTask: React.FC<ViewTaskProps> = ({ tasks, onEdit, onDelete, setTasks }
     </section>
   );
 };
+
 
 export default ViewTask;
