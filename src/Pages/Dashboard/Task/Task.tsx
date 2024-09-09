@@ -192,11 +192,14 @@ const TaskList: React.FC = () => {
           </div>
         )}
 
-        <ViewTask
-          tasks={tasks}
-          onEdit={handleEditClick}
-          onDelete={handleDeleteTask} // Pass onDelete handler
-        />
+<ViewTask
+  tasks={tasks}
+  onEdit={handleEditClick}
+  onDelete={handleDeleteTask} // Pass onDelete handler
+  setTasks={setTasks} // Pass setTasks to ViewTask
+/>
+
+       
       </div>
     </section>
   );

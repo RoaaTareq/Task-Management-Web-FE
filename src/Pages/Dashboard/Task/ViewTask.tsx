@@ -1,4 +1,5 @@
 import React from 'react';
+import axios from 'axios';
 import Card from '../../../Components/Cards/Card'; // Adjust the path as needed
 
 interface Task {
@@ -16,9 +17,36 @@ interface ViewTaskProps {
   tasks: Task[];
   onEdit: (taskId: number) => void;
   onDelete: (taskId: number) => void;
+  setTasks: React.Dispatch<React.SetStateAction<Task[]>>;
 }
 
-const ViewTask: React.FC<ViewTaskProps> = ({ tasks, onEdit, onDelete }) => {
+const ViewTask: React.FC<ViewTaskProps> = ({ tasks, onEdit, onDelete, setTasks }) => {
+
+  const handleDelete = async (taskId: number) => {
+    const token = localStorage.getItem('token');
+    
+    if (!token) {
+      alert('Unauthorized: Please log in.');
+      return;
+    }
+
+    try {
+      // Make DELETE request to the API
+      await axios.delete(`http://127.0.0.1:8000/api/tasks/${taskId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+
+      // Remove the deleted task from the state
+      setTasks((prevTasks) => prevTasks.filter((task) => task.id !== taskId));
+      alert('Task deleted successfully');
+    } catch (error) {
+      console.error('Error deleting task:', error);
+      alert('Failed to delete task.');
+    }
+  };
+
   return (
     <section>
       <div className="container">
@@ -37,7 +65,7 @@ const ViewTask: React.FC<ViewTaskProps> = ({ tasks, onEdit, onDelete }) => {
                   categories={task.categories} // Pass categories to Card
                   users={task.users} // Pass users to Card
                   onEdit={() => onEdit(task.id)}
-                  onDelete={() => onDelete(task.id)}
+                  onDelete={() => handleDelete(task.id)} // Trigger direct delete
                 />
               </div>
             ))}
