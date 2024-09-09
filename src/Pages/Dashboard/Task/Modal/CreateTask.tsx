@@ -1,6 +1,6 @@
 import React, { useState, useEffect, ChangeEvent, FormEvent } from 'react';
 import axios from 'axios';
-
+import styles from '../CSS/Task.module.css'
 // Define types for Category and TaskData
 interface Category {
   id: number;
@@ -44,41 +44,45 @@ const CreateTask: React.FC<CreateTaskProps> = ({ onAddTask, onClose }) => {
     }
 
     // Fetch categories with token included in headers
-    axios.get('http://127.0.0.1:8000/api/categories', {
-      headers: {
-        'Authorization': `Bearer ${token}` // Include JWT token
-      }
-    })
-    .then(response => setAvailableCategories(response.data))
-    .catch(error => console.error('There was an error fetching the categories!', error));
+    axios
+      .get('http://127.0.0.1:8000/api/categories', {
+        headers: {
+          Authorization: `Bearer ${token}`, // Include JWT token
+        },
+      })
+      .then((response) => setAvailableCategories(response.data))
+      .catch((error) => console.error('There was an error fetching the categories!', error));
 
     // Fetch users with token included in headers
-    axios.get('http://127.0.0.1:8000/api/users', {
-      headers: {
-        'Authorization': `Bearer ${token}` // Include JWT token
-      }
-    })
-    .then(response => setAvailableUsers(response.data))
-    .catch(error => console.error('There was an error fetching the users!', error));
+    axios
+      .get('http://127.0.0.1:8000/api/users', {
+        headers: {
+          Authorization: `Bearer ${token}`, // Include JWT token
+        },
+      })
+      .then((response) => setAvailableUsers(response.data))
+      .catch((error) => console.error('There was an error fetching the users!', error));
   }, []);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
     if (isSubmitting) {
-      // Prevent duplicate submissions
-      return;
+      return; // Prevent duplicate submissions
     }
 
     setIsSubmitting(true); // Set to true to prevent multiple submissions
 
+    const uniqueCategories = Array.from(new Set(categories)); // Ensure categories are unique
+    const uniqueAssignedUsers = Array.from(new Set(assignedUsers)); // Ensure users are unique
+
     const taskData: TaskData = {
       title,
-      category: categories.join(','), // Adjust if you need to handle multiple categories
+      category: uniqueCategories.join(','), // Adjust if handling multiple categories
       content: description,
       priority,
       due_date: dueDate,
-      assigned_users: assignedUsers,
+      assigned_users: uniqueAssignedUsers,
     };
 
     try {
@@ -91,17 +95,17 @@ const CreateTask: React.FC<CreateTaskProps> = ({ onAddTask, onClose }) => {
 
       const response = await axios.post('http://127.0.0.1:8000/api/tasks', taskData, {
         headers: {
-          'Authorization': `Bearer ${token}`
-        }
+          Authorization: `Bearer ${token}`,
+        },
       });
 
       // If task creation is successful, pass the task back to the parent component
       onAddTask(response.data);
+      resetForm(); // Reset form after successful submission
       onClose();
-
     } catch (error) {
       console.error(error);
-      alert("Error creating task");
+      alert('Error creating task');
     } finally {
       setIsSubmitting(false); // Reset submitting state after the request is complete
     }
@@ -109,24 +113,34 @@ const CreateTask: React.FC<CreateTaskProps> = ({ onAddTask, onClose }) => {
 
   const handleCategoryChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = parseInt(e.target.value);
-    setCategories(prevCategories =>
+    setCategories((prevCategories) =>
       prevCategories.includes(value)
-        ? prevCategories.filter(category => category !== value)
+        ? prevCategories.filter((category) => category !== value)
         : [...prevCategories, value]
     );
   };
 
   const handleUserChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = parseInt(e.target.value);
-    setAssignedUsers(prevUsers =>
+    setAssignedUsers((prevUsers) =>
       prevUsers.includes(value)
-        ? prevUsers.filter(user => user !== value)
+        ? prevUsers.filter((user) => user !== value)
         : [...prevUsers, value]
     );
   };
 
+  // Reset form fields after submission
+  const resetForm = () => {
+    setTitle('');
+    setDescription('');
+    setDueDate('');
+    setPriority('low');
+    setCategories([]);
+    setAssignedUsers([]);
+  };
+
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className={styles['Create-form']}>
       <div>
         <label>Title:</label>
         <input
@@ -187,7 +201,9 @@ const CreateTask: React.FC<CreateTaskProps> = ({ onAddTask, onClose }) => {
           </div>
         ))}
       </div>
-      <button type="submit" disabled={isSubmitting}>Create Task</button>
+      <button type="submit" disabled={isSubmitting}>
+        {isSubmitting ? 'Creating...' : 'Create Task'}
+      </button>
     </form>
   );
 };
