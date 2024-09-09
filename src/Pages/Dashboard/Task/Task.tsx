@@ -18,6 +18,12 @@ interface Task {
   users?: string[];
 }
 
+// Function to get the auth token
+const getAuthToken = () => localStorage.getItem('token');
+
+// API base URL
+const API_URL = 'http://127.0.0.1:8000/api';
+
 const TaskList: React.FC = () => {
   const [showCreateTask, setShowCreateTask] = useState(false);
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -29,30 +35,30 @@ const TaskList: React.FC = () => {
   useEffect(() => {
     const fetchTasks = async () => {
       try {
-        const { data } = await axios.get('http://127.0.0.1:8000/api/tasks', {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
-          },
-        });
-        setTasks(data);
+          const token = getAuthToken();
+          console.log('Token used:', token);  // Debugging line
+          const { data } = await axios.get(`${API_URL}/tasks`, {
+              headers: {
+                  Authorization: `Bearer ${token}`,
+              },
+          });
+          setTasks(data);
       } catch (err) {
-        handleError('Failed to fetch tasks.', err);
+          handleError('Failed to fetch tasks.', err);
       }
-    };
+  };
+  
     fetchTasks();
   }, []);
 
-  // Fetch categories for a specific task
+  // Fetch task categories
   const fetchTaskCategories = async (taskId: number) => {
     try {
-      const { data } = await axios.get(
-        `http://127.0.0.1:8000/api/tasks/${taskId}/categories`,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
-          },
-        }
-      );
+      const { data } = await axios.get(`${API_URL}/tasks/${taskId}/categories`, {
+        headers: {
+          Authorization: `Bearer ${getAuthToken()}`,
+        },
+      });
       return data;
     } catch (err) {
       handleError('Error fetching task categories.', err);
@@ -60,17 +66,14 @@ const TaskList: React.FC = () => {
     }
   };
 
-  // Fetch users for a specific task
+  // Fetch users for a task
   const fetchUsersForTask = async (taskId: number) => {
     try {
-      const { data } = await axios.get(
-        `http://127.0.0.1:8000/api/tasks/${taskId}/users`,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
-          },
-        }
-      );
+      const { data } = await axios.get(`${API_URL}/tasks/${taskId}/users`, {
+        headers: {
+          Authorization: `Bearer ${getAuthToken()}`,
+        },
+      });
       return data;
     } catch (err) {
       handleError('Error fetching users for task.', err);
@@ -81,15 +84,11 @@ const TaskList: React.FC = () => {
   // Add a new task
   const handleAddTask = async (newTask: Omit<Task, 'id'>) => {
     try {
-      const { data } = await axios.post(
-        'http://127.0.0.1:8000/api/tasks',
-        newTask,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
-          },
-        }
-      );
+      const { data } = await axios.post(`${API_URL}/tasks`, newTask, {
+        headers: {
+          Authorization: `Bearer ${getAuthToken()}`,
+        },
+      });
       setTasks((prev) => [...prev, data]);
       setShowCreateTask(false);
     } catch (err) {
@@ -100,15 +99,11 @@ const TaskList: React.FC = () => {
   // Edit an existing task
   const handleEditTask = async (taskId: number, updatedTask: Task) => {
     try {
-      const { data } = await axios.put(
-        `http://127.0.0.1:8000/api/tasks/${taskId}`,
-        updatedTask,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
-          },
-        }
-      );
+      const { data } = await axios.put(`${API_URL}/tasks/${taskId}`, updatedTask, {
+        headers: {
+          Authorization: `Bearer ${getAuthToken()}`,
+        },
+      });
       const categories = await fetchTaskCategories(taskId);
       const users = await fetchUsersForTask(taskId);
       updateTaskInList(taskId, { ...data, categories, users });
@@ -121,9 +116,9 @@ const TaskList: React.FC = () => {
   // Delete a task
   const handleDeleteTask = async (taskId: number) => {
     try {
-      await axios.delete(`http://127.0.0.1:8000/api/tasks/${taskId}`, {
+      await axios.delete(`${API_URL}/tasks/${taskId}`, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
+          Authorization: `Bearer ${getAuthToken()}`,
         },
       });
       setTasks((prev) => prev.filter((task) => task.id !== taskId));

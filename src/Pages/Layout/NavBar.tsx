@@ -12,6 +12,7 @@ const MainNavbar: React.FC = () => {
           
            
             { href: '/tasks', text: 'Create Task' },
+            {href: '/summary', text: 'statistics ' },
             { href: '/logout', text: 'Logout', onClick: logout }, // Logout link calls the logout function
         ]
         : [

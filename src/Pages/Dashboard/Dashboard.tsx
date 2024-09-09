@@ -1,9 +1,7 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 import TaskList from "./Task/Task";
-// import UserList from "./User/UserList";
-// import ProjectList from "./Project/ProjectList";
-
+import Summary from './Summary'
 
 import "./dashboard.css";
 
@@ -18,8 +16,8 @@ const DashboardLayout = () => {
                     <div className="dashboard-content">
                         <Routes>
                             <Route path="/tasks" element={<TaskList />} />
-                            {/* <Route path="/users" element={<UserList />} /> */}
-                            {/* <Route path="/projects" element={<ProjectList />} /> */}
+                            <Route path="/summary" element={<Summary />} />
+                          
                         </Routes>
                     </div>
                 </div>
