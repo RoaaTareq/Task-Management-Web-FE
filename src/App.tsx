@@ -28,21 +28,14 @@ const App: React.FC = () => {
           <Route path="/logout" element={<Logout />} />
           
           {/* Protect the Dashboard and its routes */}
-          {/* <Route 
+          <Route 
             path="/*" 
             element={
               <ProtectedRoute>
                 <Dashboard />
               </ProtectedRoute>
             } 
-          /> */}
-          <Route 
-            path="/*" 
-            element={
-             
-                <Dashboard />}
-              
-              />
+          />
         </Routes>
       </Router>
     </AuthProvider>
