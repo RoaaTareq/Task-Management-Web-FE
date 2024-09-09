@@ -45,6 +45,8 @@ body {
   display: none;
 }
 
+
+
 @media (max-width: 767px) {
   .main-navbar {
     display: none;

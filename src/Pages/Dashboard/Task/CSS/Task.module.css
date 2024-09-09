@@ -20,6 +20,43 @@
   margin-top: 20px;
 }
 
+/* Adjust the path and include it in the component */
+.filter-container {
+  margin: 20px 0;
+  display: flex;
+
+}
+
+.filter-button {
+  margin-right: 10px;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  background-color: #007bff;
+  color:#FFF;
+  border-radius: 12px;
+}
+
+.filter-button.active {
+  background-color: #007bff;
+  color: white;
+}
+
+.priorityLow {
+ color:green;
+ font-size: 25px;
+}
+
+.priorityMedium {
+  color: orange;
+}
+
+.priorityHigh {
+  color: red;
+}
+
+
+
 @media (min-width: 768px) {
     .Create-form {
       max-width: 500px; 
@@ -30,4 +67,5 @@
     .Create-form {
       max-width: 600px; 
   }
+
 }

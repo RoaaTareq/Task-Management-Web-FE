@@ -2,11 +2,11 @@ import React, { useState, useRef, useEffect } from 'react';
 import Button from '../../../Components/Buttons/Button';
 import ViewTask from './ViewTask';
 import CreateTask from './Modal/CreateTask';
-import EditTask from './Modal/EditTask'; // Ensure the correct import path
+import EditTask from './Modal/EditTask';
 import styles from './CSS/Task.module.css';
 import axios from 'axios';
 
-// Define Task type to include category
+// Task interface definition
 interface Task {
   id: number;
   title: string;
@@ -14,8 +14,8 @@ interface Task {
   content: string;
   priority: string;
   due_date: string;
-  categories?: string[]; // Optional: categories for the task
-  users?: string[]; // Optional: users assigned to the task
+  categories?: string[];
+  users?: string[];
 }
 
 const TaskList: React.FC = () => {
@@ -25,140 +25,156 @@ const TaskList: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const createTaskRef = useRef<HTMLDivElement>(null);
 
+  // Fetch tasks on component mount
   useEffect(() => {
     const fetchTasks = async () => {
       try {
-        const response = await axios.get('http://127.0.0.1:8000/api/tasks', {
+        const { data } = await axios.get('http://127.0.0.1:8000/api/tasks', {
           headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
-          }
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
         });
-        setTasks(response.data);
+        setTasks(data);
       } catch (err) {
-        setError('Failed to fetch tasks.');
-        console.error('Error fetching tasks:', err);
+        handleError('Failed to fetch tasks.', err);
       }
     };
-
     fetchTasks();
   }, []);
 
+  // Fetch categories for a specific task
   const fetchTaskCategories = async (taskId: number) => {
     try {
-      const response = await axios.get(`http://127.0.0.1:8000/api/tasks/${taskId}/categories`, {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+      const { data } = await axios.get(
+        `http://127.0.0.1:8000/api/tasks/${taskId}/categories`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
         }
-      });
-      return response.data;
+      );
+      return data;
     } catch (err) {
-      console.error('Error fetching task categories:', err);
+      handleError('Error fetching task categories.', err);
       return [];
     }
   };
 
+  // Fetch users for a specific task
   const fetchUsersForTask = async (taskId: number) => {
     try {
-      const response = await axios.get(`http://127.0.0.1:8000/api/tasks/${taskId}/users`, {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+      const { data } = await axios.get(
+        `http://127.0.0.1:8000/api/tasks/${taskId}/users`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
         }
-      });
-      return response.data;
+      );
+      return data;
     } catch (err) {
-      console.error('Error fetching users for task:', err);
+      handleError('Error fetching users for task.', err);
       return [];
     }
   };
 
-  const handleAddTask = async (task: {
-    title: string;
-    category: string;
-    content: string;
-    priority: string;
-    due_date: string;
-  }) => {
+  // Add a new task
+  const handleAddTask = async (newTask: Omit<Task, 'id'>) => {
     try {
-      const response = await axios.post('http://127.0.0.1:8000/api/tasks', task, {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+      const { data } = await axios.post(
+        'http://127.0.0.1:8000/api/tasks',
+        newTask,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
         }
-      });
-      setTasks((prevTasks) => [...prevTasks, response.data]);
+      );
+      setTasks((prev) => [...prev, data]);
       setShowCreateTask(false);
     } catch (err) {
-      setError('Failed to add task.');
-      console.error('Error adding task:', err);
+      handleError('Failed to add task.', err);
     }
   };
 
+  // Edit an existing task
   const handleEditTask = async (taskId: number, updatedTask: Task) => {
     try {
-      const response = await axios.put(`http://127.0.0.1:8000/api/tasks/${taskId}`, updatedTask, {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+      const { data } = await axios.put(
+        `http://127.0.0.1:8000/api/tasks/${taskId}`,
+        updatedTask,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
         }
-      });
-      const updatedTaskData = response.data;
+      );
       const categories = await fetchTaskCategories(taskId);
       const users = await fetchUsersForTask(taskId);
-
-      setTasks((prevTasks) =>
-        prevTasks.map((task) => (task.id === taskId ? { ...updatedTaskData, categories, users } : task))
-      );
+      updateTaskInList(taskId, { ...data, categories, users });
       setEditTaskId(null);
     } catch (err) {
-      if (axios.isAxiosError(err) && err.response?.status === 403) {
-        setError('Unauthorized: You cannot edit this task.');
-      } else {
-        setError('Failed to update task.');
-      }
-      console.error('Error updating task:', err);
+      handleError('Failed to update task.', err, 403, 'Unauthorized: You cannot edit this task.');
     }
   };
 
+  // Delete a task
   const handleDeleteTask = async (taskId: number) => {
     try {
       await axios.delete(`http://127.0.0.1:8000/api/tasks/${taskId}`, {
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
       });
-      setTasks((prevTasks) => prevTasks.filter((task) => task.id !== taskId));
+      setTasks((prev) => prev.filter((task) => task.id !== taskId));
     } catch (err) {
-      if (axios.isAxiosError(err) && err.response?.status === 403) {
-        setError('Unauthorized: You cannot delete this task.');
-      } else {
-        setError('Failed to delete task.');
-      }
-      console.error('Error deleting task:', err);
+      handleError('Failed to delete task.', err, 403, 'Unauthorized: You cannot delete this task.');
     }
   };
 
-  const handleEditClick = (taskId: number) => {
-    setEditTaskId(taskId);
+  // Update task in the state list
+  const updateTaskInList = (taskId: number, updatedTask: Task) => {
+    setTasks((prev) =>
+      prev.map((task) => (task.id === taskId ? updatedTask : task))
+    );
   };
 
-  const handleCloseForm = () => {
-    setShowCreateTask(false); // Hide form when cancel or outside click
-  };
+  // Handle task editing
+  const handleEditClick = (taskId: number) => setEditTaskId(taskId);
 
+  // Handle closing the create task form
+  const handleCloseForm = () => setShowCreateTask(false);
+
+  // Close the form when clicking outside
   const handleClickOutside = (event: MouseEvent) => {
     if (createTaskRef.current && !createTaskRef.current.contains(event.target as Node)) {
       setShowCreateTask(false);
     }
   };
 
+  // Error handling
+  const handleError = (
+    defaultMessage: string,
+    error: any,
+    status?: number,
+    customMessage?: string
+  ) => {
+    if (axios.isAxiosError(error) && error.response?.status === status) {
+      setError(customMessage || defaultMessage);
+    } else {
+      setError(defaultMessage);
+    }
+    console.error(defaultMessage, error);
+  };
+
+  // Attach and detach event listeners for clicking outside the form
   useEffect(() => {
     if (showCreateTask) {
       document.addEventListener('mousedown', handleClickOutside);
     } else {
       document.removeEventListener('mousedown', handleClickOutside);
     }
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [showCreateTask]);
 
   return (
@@ -192,14 +208,12 @@ const TaskList: React.FC = () => {
           </div>
         )}
 
-<ViewTask
-  tasks={tasks}
-  onEdit={handleEditClick}
-  onDelete={handleDeleteTask} // Pass onDelete handler
-  setTasks={setTasks} // Pass setTasks to ViewTask
-/>
-
-       
+        <ViewTask
+          tasks={tasks}
+          onEdit={handleEditClick}
+          onDelete={handleDeleteTask}
+          setTasks={setTasks}
+        />
       </div>
     </section>
   );
