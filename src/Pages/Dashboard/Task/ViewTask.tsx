@@ -72,6 +72,8 @@ const ViewTask: React.FC<ViewTaskProps> = ({ tasks = [], onEdit, onDelete, setTa
   };
 
   useEffect(() => {
+    console.log('Pusher Key:', process.env.REACT_APP_PUSHER_APP_KEY);
+  console.log('Pusher Cluster:', process.env.REACT_APP_PUSHER_APP_CLUSTER);
     if (!process.env.REACT_APP_PUSHER_APP_KEY || !process.env.REACT_APP_PUSHER_APP_CLUSTER) {
       console.error('Pusher key or cluster is missing!');
       return;
@@ -81,10 +83,11 @@ const ViewTask: React.FC<ViewTaskProps> = ({ tasks = [], onEdit, onDelete, setTa
   
     const echo = new Echo({
       broadcaster: 'pusher',
-      key: process.env.REACT_APP_PUSHER_APP_KEY,
-      cluster: process.env.REACT_APP_PUSHER_APP_CLUSTER,
+      key: '6b8fe1afa1493628c215', // Hardcoded for testing
+      cluster: 'ap2', // Hardcoded for testing
       forceTLS: true,
     });
+    
   
     const channel = echo.channel('tasks');
     channel.listen('TaskUpdated', (e: TaskUpdatedEvent) => {
