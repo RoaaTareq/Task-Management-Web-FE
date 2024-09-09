@@ -36,7 +36,6 @@ const Dashboard = () => {
     const fetchStatistics = async () => {
         try {
             const token = localStorage.getItem('token');  // Fetch token from local storage
-            console.log('Token:', token); // Check if token is retrieved properly
             const response = await axios.get('http://127.0.0.1:8000/api/dashboard', {
                 headers: {
                     Authorization: `Bearer ${token}`,  // Correct format
@@ -53,7 +52,10 @@ const Dashboard = () => {
             setLoading(false);
         }
     };
-    
+
+    useEffect(() => {
+        fetchStatistics();
+    }, []);
 
     if (loading) return <div>Loading...</div>;
     if (error) return <div>Error: {error}</div>;
@@ -76,9 +78,9 @@ const Dashboard = () => {
                 <h3>Tasks per Category</h3>
                 {Object.keys(statistics.tasks_per_category).length > 0 ? (
                     <ul>
-                        {Object.entries(statistics.tasks_per_category).map(([category, tasks], index) => (
+                        {Object.entries(statistics.tasks_per_category).map(([category, taskCount], index) => (
                             <li key={index}>
-                                <strong>{category}:</strong> {(tasks as Array<any>).length} tasks
+                                <strong>{category}:</strong> {taskCount} tasks
                             </li>
                         ))}
                     </ul>
