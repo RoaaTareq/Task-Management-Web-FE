@@ -4,15 +4,14 @@ import SelectList from '../../../../Components/DropDownList/SelectList'; // Impo
 import Button from '../../../../Components/Buttons/Button';
 import styles from '../CSS/Task.module.css';
 
-// Extend Task interface to include new fields
+// Task interface with consistent property names
 interface Task {
   id: number;
   title: string;
-  projectName: string;
+  category: string; // Updated to category
   content: string;
   priority: string;
-  startTime: string;
-  endTime: string;
+  due_date: string; // Ensure this matches the interface
 }
 
 interface EditTaskProps {
@@ -22,11 +21,10 @@ interface EditTaskProps {
 
 const EditTask: React.FC<EditTaskProps> = ({ task, onEditTask }) => {
   const [taskTitle, setTaskTitle] = useState(task.title);
-  const [projectName, setProjectName] = useState(task.projectName);
+  const [category, setCategory] = useState(task.category); // Changed from projectName to category
   const [description, setDescription] = useState(task.content);
   const [priority, setPriority] = useState(task.priority);
-  const [startTime, setStartTime] = useState(task.startTime);
-  const [endTime, setEndTime] = useState(task.endTime);
+  const [dueDate, setDueDate] = useState(task.due_date); // Use initial value from task.due_date
 
   const priorityOptions = [
     { value: 'low', label: 'Low' },
@@ -36,14 +34,13 @@ const EditTask: React.FC<EditTaskProps> = ({ task, onEditTask }) => {
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    const updatedTask = {
+    const updatedTask: Task = {
       id: task.id,
       title: taskTitle,
-      projectName: projectName,
+      category, // Updated to category
       content: description,
       priority,
-      startTime,
-      endTime,
+      due_date: dueDate, // Ensure this is the correct property name
     };
     onEditTask(updatedTask);
   };
@@ -57,9 +54,9 @@ const EditTask: React.FC<EditTaskProps> = ({ task, onEditTask }) => {
       />
 
       <Input
-        value={projectName}
-        placeholder="Project Name"
-        onChange={(e) => setProjectName(e.target.value)}
+        value={category} // Updated to category
+        placeholder="Category"
+        onChange={(e) => setCategory(e.target.value)}
       />
 
       <Input
@@ -78,14 +75,8 @@ const EditTask: React.FC<EditTaskProps> = ({ task, onEditTask }) => {
 
       <Input
         type="date"
-        value={startTime}
-        onChange={(e) => setStartTime(e.target.value)}
-      />
-
-      <Input
-        type="date"
-        value={endTime}
-        onChange={(e) => setEndTime(e.target.value)}
+        value={dueDate}
+        onChange={(e) => setDueDate(e.target.value)}
       />
 
       <Button label="Save Changes" type="submit" styleType="primary" />

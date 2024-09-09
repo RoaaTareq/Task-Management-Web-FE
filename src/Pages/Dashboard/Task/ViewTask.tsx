@@ -4,7 +4,7 @@ import Card from '../../../Components/Cards/Card'; // Adjust the path as needed
 interface Task {
   id: number;
   title: string;
-  projectName: string;
+  category: string; // Updated to category
   content: string;
 }
 
@@ -26,7 +26,7 @@ const ViewTask: React.FC<ViewTaskProps> = ({ tasks, onEdit }) => {
                 <Card
                   title={task.title}
                   content={task.content}
-                  projectName={task.projectName}
+                  category={task.category} // Updated to category
                   onEdit={() => onEdit(task.id)}
                   onDelete={() => console.log(`Delete ${task.title}`)}
                 />

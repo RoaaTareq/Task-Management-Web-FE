@@ -12,8 +12,8 @@ interface TaskData {
   category: string; // Updated to category
   content: string;
   priority: string;
-  due_date: string;
-  
+  startTime: string;
+  endTime: string;
 }
 
 // Define the props for CreateTask component
@@ -49,8 +49,8 @@ const CreateTask: React.FC<CreateTaskProps> = ({ onAddTask, onClose }) => {
       category: categories.join(','), // Adjust if you need to handle multiple categories
       content: description,
       priority,
-      due_date: dueDate,
-      
+      startTime: dueDate,
+      endTime: dueDate,
     };
 
     try {

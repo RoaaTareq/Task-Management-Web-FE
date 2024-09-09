@@ -6,6 +6,7 @@ interface CardProps {
   title: string;
   content: string;
   imageUrl?: string; // Optional image URL
+  category?:string;
   footer?: React.ReactNode; // Optional footer content
   style?: React.CSSProperties;
   className?: string; // Allow additional custom class names

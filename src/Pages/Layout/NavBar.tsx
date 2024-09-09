@@ -3,15 +3,15 @@ import Navbar from '../../Components/Layout/NavBar'; // Adjust the path as neces
 import { AuthContext } from '../../Context/AuthContext'; // Import the AuthContext
 
 const MainNavbar: React.FC = () => {
-    const { isAuthenticated, isAdmin, logout } = useContext(AuthContext) || {};
+    const { isAuthenticated, logout } = useContext(AuthContext) || {};
 
     // Conditionally render links based on authentication status and admin status
     const links = isAuthenticated
         ? [
-            ...(isAdmin ? [
+             
                 { href: '/users', text: 'Users' },
                 { href: '/projects', text: 'Create Project' },
-            ] : []),
+           
             { href: '/tasks', text: 'Create Task' },
             { href: '/logout', text: 'Logout', onClick: logout }, // Logout link calls the logout function
         ]

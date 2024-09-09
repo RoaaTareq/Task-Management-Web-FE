@@ -4,21 +4,21 @@ import  jwtDecode from 'jwt-decode';
 
 interface AuthContextType {
   isAuthenticated: boolean;
-  isAdmin: boolean;
+  // isAdmin: boolean;
   login: (token: string) => void;
   logout: () => void;
 }
 
 export const AuthContext = createContext<AuthContextType>({
   isAuthenticated: false,
-  isAdmin: false,
+  // isAdmin: false,
   login: () => {},
   logout: () => {},
 });
 
 const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-  const [isAdmin, setIsAdmin] = useState<boolean>(false);
+  // const [isAdmin, setIsAdmin] = useState<boolean>(false);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -26,7 +26,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
       try {
         const decodedToken: any = jwtDecode(token);
         setIsAuthenticated(true);
-        setIsAdmin(decodedToken.is_admin);
+        // setIsAdmin(decodedToken.is_admin);
       } catch (e) {
         console.error('Failed to decode token', e);
       }
@@ -38,7 +38,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
     try {
       const decodedToken: any = jwtDecode(token);
       setIsAuthenticated(true);
-      setIsAdmin(decodedToken.is_admin);
+      // setIsAdmin(decodedToken.is_admin);
     } catch (e) {
       console.error('Failed to decode token', e);
     }
@@ -47,11 +47,11 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
   const logout = () => {
     localStorage.removeItem('token');
     setIsAuthenticated(false);
-    setIsAdmin(false);
+    // setIsAdmin(false);
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, isAdmin, login, logout }}>
+    <AuthContext.Provider value={{ isAuthenticated,login, logout }}>
       {children}
     </AuthContext.Provider>
   );

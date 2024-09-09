@@ -5,14 +5,26 @@ import CreateTask from './Modal/CreateTask';
 import EditTask from './Modal/EditTask'; // Ensure the correct import path
 import styles from './CSS/Task.module.css';
 
+// Define Task type to include category
 interface Task {
   id: number;
   title: string;
-  projectName: string;
+  category: string; // Updated to category
   content: string;
   priority: string;
-  startTime: string;
-  endTime: string;
+  due_date:string
+}
+
+// Define the props expected by CreateTask component
+interface CreateTaskProps {
+  onAddTask: (task: {
+    title: string;
+    category: string; // Updated to category
+    content: string;
+    priority: string;
+    due_date:string
+  }) => void;
+  onClose: () => void;
 }
 
 const TaskList: React.FC = () => {
@@ -45,11 +57,10 @@ const TaskList: React.FC = () => {
 
   const handleAddTask = (task: {
     title: string;
-    projectName: string;
+    category: string; // Updated to category
     content: string;
     priority: string;
-    startTime: string;
-    endTime: string;
+    due_date:string
   }) => {
     const newTask: Task = {
       ...task,
