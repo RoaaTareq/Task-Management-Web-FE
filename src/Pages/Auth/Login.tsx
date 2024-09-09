@@ -30,7 +30,7 @@ const Login: React.FC = () => {
       localStorage.setItem('token', response.token);
 
       // Redirect after successful login
-      window.location.href = "/task";
+      window.location.href = "/tasks";
       
       // Clear email and password inputs
       setEmail('');

@@ -9,8 +9,7 @@ const MainNavbar: React.FC = () => {
     const links = isAuthenticated
         ? [
              
-                { href: '/users', text: 'Users' },
-                { href: '/projects', text: 'Create Project' },
+          
            
             { href: '/tasks', text: 'Create Task' },
             { href: '/logout', text: 'Logout', onClick: logout }, // Logout link calls the logout function
