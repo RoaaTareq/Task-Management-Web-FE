@@ -9,11 +9,11 @@ interface Category {
 
 interface TaskData {
   title: string;
-  category: string; // Adjust if you need to handle multiple categories
+  category: string;
   content: string;
   priority: string;
   due_date: string;
-  assigned_users: number[]; // Add this field
+  assigned_users: number[];
 }
 
 // Define the props for CreateTask component
@@ -31,16 +31,31 @@ const CreateTask: React.FC<CreateTaskProps> = ({ onAddTask, onClose }) => {
   const [availableCategories, setAvailableCategories] = useState<Category[]>([]);
   const [availableUsers, setAvailableUsers] = useState<{ id: number, name: string }[]>([]);
   const [assignedUsers, setAssignedUsers] = useState<number[]>([]);
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false); // Track form submission
 
   // Fetch categories and users from the backend
   useEffect(() => {
-    axios.get('http://127.0.0.1:8000/api/categories')
-      .then(response => setAvailableCategories(response.data))
-      .catch(error => console.error('There was an error fetching the categories!', error));
-      
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+      console.error('No token found. Please log in.');
+      alert('Unauthorized: Please log in.');
+      return;
+    }
+
+    // Fetch categories with token included in headers
+    axios.get('http://127.0.0.1:8000/api/categories', {
+      headers: {
+        'Authorization': `Bearer ${token}` // Include JWT token
+      }
+    })
+    .then(response => setAvailableCategories(response.data))
+    .catch(error => console.error('There was an error fetching the categories!', error));
+
+    // Fetch users with token included in headers
     axios.get('http://127.0.0.1:8000/api/users', {
       headers: {
-        'Authorization': `Bearer ${localStorage.getItem('token')}` // Include JWT token
+        'Authorization': `Bearer ${token}` // Include JWT token
       }
     })
     .then(response => setAvailableUsers(response.data))
@@ -50,29 +65,45 @@ const CreateTask: React.FC<CreateTaskProps> = ({ onAddTask, onClose }) => {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
+    if (isSubmitting) {
+      // Prevent duplicate submissions
+      return;
+    }
+
+    setIsSubmitting(true); // Set to true to prevent multiple submissions
+
     const taskData: TaskData = {
       title,
       category: categories.join(','), // Adjust if you need to handle multiple categories
       content: description,
       priority,
       due_date: dueDate,
-      assigned_users: assignedUsers, // Include assigned users
+      assigned_users: assignedUsers,
     };
 
     try {
       const token = localStorage.getItem('token');
-      console.log('Token:', token); // Log the token
-      await axios.post('http://127.0.0.1:8000/api/tasks', taskData, {
+      if (!token) {
+        alert('Unauthorized: Please log in.');
+        setIsSubmitting(false);
+        return;
+      }
+
+      const response = await axios.post('http://127.0.0.1:8000/api/tasks', taskData, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
       });
 
-      onAddTask(taskData);
+      // If task creation is successful, pass the task back to the parent component
+      onAddTask(response.data);
       onClose();
+
     } catch (error) {
       console.error(error);
       alert("Error creating task");
+    } finally {
+      setIsSubmitting(false); // Reset submitting state after the request is complete
     }
   };
 
@@ -156,7 +187,7 @@ const CreateTask: React.FC<CreateTaskProps> = ({ onAddTask, onClose }) => {
           </div>
         ))}
       </div>
-      <button type="submit">Create Task</button>
+      <button type="submit" disabled={isSubmitting}>Create Task</button>
     </form>
   );
 };

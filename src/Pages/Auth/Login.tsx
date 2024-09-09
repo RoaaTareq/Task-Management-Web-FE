@@ -25,7 +25,14 @@ const Login: React.FC = () => {
     try {
       const response = await login({ email, password });
       setSuccess('Login successful');
+
+      // Store the token in localStorage (this happens inside the `login` function)
+      localStorage.setItem('token', response.token);
+
+      // Redirect after successful login
       window.location.href = "/task";
+      
+      // Clear email and password inputs
       setEmail('');
       setPassword('');
     } catch (error: any) {
@@ -36,12 +43,10 @@ const Login: React.FC = () => {
 
   useEffect(() => {
     if (error) {
-      // Set a timeout to clear the error after 5 seconds
       const id = setTimeout(() => setError(null), 3000);
       setTimeoutId(id);
     }
 
-    // Cleanup the timeout if the component unmounts or if the error changes
     return () => {
       if (timeoutId) {
         clearTimeout(timeoutId);
