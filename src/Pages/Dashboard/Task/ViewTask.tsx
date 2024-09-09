@@ -4,16 +4,21 @@ import Card from '../../../Components/Cards/Card'; // Adjust the path as needed
 interface Task {
   id: number;
   title: string;
-  category: string; // Updated to category
+  category: string;
   content: string;
+  priority: string;
+  due_date: string;
+  categories?: string[];
+  users?: string[];
 }
 
 interface ViewTaskProps {
   tasks: Task[];
   onEdit: (taskId: number) => void;
+  onDelete: (taskId: number) => void;
 }
 
-const ViewTask: React.FC<ViewTaskProps> = ({ tasks, onEdit }) => {
+const ViewTask: React.FC<ViewTaskProps> = ({ tasks, onEdit, onDelete }) => {
   return (
     <section>
       <div className="container">
@@ -26,9 +31,13 @@ const ViewTask: React.FC<ViewTaskProps> = ({ tasks, onEdit }) => {
                 <Card
                   title={task.title}
                   content={task.content}
-                  category={task.category} // Updated to category
+                  category={task.category}
+                  priority={task.priority}
+                  due_date={task.due_date}
+                  categories={task.categories} // Pass categories to Card
+                  users={task.users} // Pass users to Card
                   onEdit={() => onEdit(task.id)}
-                  onDelete={() => console.log(`Delete ${task.title}`)}
+                  onDelete={() => onDelete(task.id)}
                 />
               </div>
             ))}

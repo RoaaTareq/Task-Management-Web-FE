@@ -9,11 +9,11 @@ interface Category {
 
 interface TaskData {
   title: string;
-  category: string; // Updated to category
+  category: string; // Adjust if you need to handle multiple categories
   content: string;
   priority: string;
   due_date: string;
-  
+  assigned_users: number[]; // Add this field
 }
 
 // Define the props for CreateTask component
@@ -29,16 +29,22 @@ const CreateTask: React.FC<CreateTaskProps> = ({ onAddTask, onClose }) => {
   const [priority, setPriority] = useState<string>('low');
   const [categories, setCategories] = useState<number[]>([]);
   const [availableCategories, setAvailableCategories] = useState<Category[]>([]);
+  const [availableUsers, setAvailableUsers] = useState<{ id: number, name: string }[]>([]);
+  const [assignedUsers, setAssignedUsers] = useState<number[]>([]);
 
-  // Fetch categories from the backend
+  // Fetch categories and users from the backend
   useEffect(() => {
-    axios.get('http://127.0.0.1:8000/api/categories') // Adjust the endpoint according to your backend setup
-      .then(response => {
-        setAvailableCategories(response.data);
-      })
-      .catch(error => {
-        console.error('There was an error fetching the categories!', error);
-      });
+    axios.get('http://127.0.0.1:8000/api/categories')
+      .then(response => setAvailableCategories(response.data))
+      .catch(error => console.error('There was an error fetching the categories!', error));
+      
+    axios.get('http://127.0.0.1:8000/api/users', {
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('token')}` // Include JWT token
+      }
+    })
+    .then(response => setAvailableUsers(response.data))
+    .catch(error => console.error('There was an error fetching the users!', error));
   }, []);
 
   const handleSubmit = async (e: FormEvent) => {
@@ -50,18 +56,20 @@ const CreateTask: React.FC<CreateTaskProps> = ({ onAddTask, onClose }) => {
       content: description,
       priority,
       due_date: dueDate,
-      
+      assigned_users: assignedUsers, // Include assigned users
     };
 
     try {
+      const token = localStorage.getItem('token');
+      console.log('Token:', token); // Log the token
       await axios.post('http://127.0.0.1:8000/api/tasks', taskData, {
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}` // Include JWT token
+          'Authorization': `Bearer ${token}`
         }
       });
 
-      onAddTask(taskData); // Notify parent component
-      onClose(); // Close the form
+      onAddTask(taskData);
+      onClose();
     } catch (error) {
       console.error(error);
       alert("Error creating task");
@@ -74,6 +82,15 @@ const CreateTask: React.FC<CreateTaskProps> = ({ onAddTask, onClose }) => {
       prevCategories.includes(value)
         ? prevCategories.filter(category => category !== value)
         : [...prevCategories, value]
+    );
+  };
+
+  const handleUserChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const value = parseInt(e.target.value);
+    setAssignedUsers(prevUsers =>
+      prevUsers.includes(value)
+        ? prevUsers.filter(user => user !== value)
+        : [...prevUsers, value]
     );
   };
 
@@ -122,6 +139,20 @@ const CreateTask: React.FC<CreateTaskProps> = ({ onAddTask, onClose }) => {
               onChange={handleCategoryChange}
             />
             <label>{category.name}</label>
+          </div>
+        ))}
+      </div>
+      <div>
+        <label>Assign Users:</label>
+        {availableUsers.map((user) => (
+          <div key={user.id}>
+            <input
+              type="checkbox"
+              value={user.id}
+              checked={assignedUsers.includes(user.id)}
+              onChange={handleUserChange}
+            />
+            <label>{user.name}</label>
           </div>
         ))}
       </div>
