@@ -13,6 +13,11 @@
 .error-message{
   color:red
 }
+.successMessage{
+  color: green;
+  font-size: 25px;
+  font-weight: 500;
+}
 .no-tasks-message {
   text-align: center;
   font-size: 1.2rem;
