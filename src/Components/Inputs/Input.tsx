@@ -9,6 +9,7 @@ interface InputProps {
   disabled?: boolean;
   style?: React.CSSProperties;
   className?: string; // Allow additional custom class names
+  required?: boolean; 
 }
 
 

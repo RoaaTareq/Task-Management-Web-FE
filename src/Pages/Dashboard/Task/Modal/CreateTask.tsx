@@ -1,7 +1,10 @@
 import React, { useState, useEffect, ChangeEvent, FormEvent } from 'react';
 import axios from 'axios';
-import styles from '../CSS/Task.module.css'
-// Define types for Category and TaskData
+import Input from '../../../../Components/Inputs/Input'; // Import reusable input
+import Button from '../../../../Components/Buttons/Button'; // Import reusable button
+import SelectList from '../../../../Components/DropDownList/SelectList'; // Import reusable select list
+import styles from '../CSS/Task.module.css';
+
 interface Category {
   id: number;
   name: string;
@@ -14,9 +17,9 @@ interface TaskData {
   priority: string;
   due_date: string;
   assigned_users: number[];
+  is_completed: boolean;
 }
 
-// Define the props for CreateTask component
 interface CreateTaskProps {
   onAddTask: (task: TaskData) => void;
   onClose: () => void;
@@ -31,9 +34,9 @@ const CreateTask: React.FC<CreateTaskProps> = ({ onAddTask, onClose }) => {
   const [availableCategories, setAvailableCategories] = useState<Category[]>([]);
   const [availableUsers, setAvailableUsers] = useState<{ id: number, name: string }[]>([]);
   const [assignedUsers, setAssignedUsers] = useState<number[]>([]);
-  const [isSubmitting, setIsSubmitting] = useState<boolean>(false); // Track form submission
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [isCompleted, setIsCompleted] = useState<boolean>(false); // State for is_completed
 
-  // Fetch categories and users from the backend
   useEffect(() => {
     const token = localStorage.getItem('token');
 
@@ -43,46 +46,39 @@ const CreateTask: React.FC<CreateTaskProps> = ({ onAddTask, onClose }) => {
       return;
     }
 
-    // Fetch categories with token included in headers
-    axios
-      .get('http://127.0.0.1:8000/api/categories', {
-        headers: {
-          Authorization: `Bearer ${token}`, // Include JWT token
-        },
-      })
-      .then((response) => setAvailableCategories(response.data))
-      .catch((error) => console.error('There was an error fetching the categories!', error));
+    axios.get('http://127.0.0.1:8000/api/categories', {
+      headers: { Authorization: `Bearer ${token}` }
+    })
+    .then(response => setAvailableCategories(response.data))
+    .catch(error => console.error('Error fetching categories:', error));
 
-    // Fetch users with token included in headers
     axios
-      .get('http://127.0.0.1:8000/api/users', {
-        headers: {
-          Authorization: `Bearer ${token}`, // Include JWT token
-        },
-      })
-      .then((response) => setAvailableUsers(response.data))
-      .catch((error) => console.error('There was an error fetching the users!', error));
-  }, []);
+    .get('http://127.0.0.1:8000/api/users', {
+      headers: {
+        Authorization: `Bearer ${token}`, // Include JWT token
+      },
+    })
+    .then((response) => setAvailableUsers(response.data))
+    .catch((error) => console.error('There was an error fetching the users!', error));
+}, []);
+
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    if (isSubmitting) return;
 
-    if (isSubmitting) {
-      return; // Prevent duplicate submissions
-    }
-
-    setIsSubmitting(true); // Set to true to prevent multiple submissions
-
-    const uniqueCategories = Array.from(new Set(categories)); // Ensure categories are unique
-    const uniqueAssignedUsers = Array.from(new Set(assignedUsers)); // Ensure users are unique
+    setIsSubmitting(true);
+    const uniqueCategories = Array.from(new Set(categories));
+    const uniqueAssignedUsers = Array.from(new Set(assignedUsers));
 
     const taskData: TaskData = {
       title,
-      category: uniqueCategories.join(','), // Adjust if handling multiple categories
+      category: uniqueCategories.join(','),
       content: description,
       priority,
       due_date: dueDate,
       assigned_users: uniqueAssignedUsers,
+      is_completed: isCompleted, // Include is_completed in task data
     };
 
     try {
@@ -94,42 +90,38 @@ const CreateTask: React.FC<CreateTaskProps> = ({ onAddTask, onClose }) => {
       }
 
       const response = await axios.post('http://127.0.0.1:8000/api/tasks', taskData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
       });
 
-      // If task creation is successful, pass the task back to the parent component
       onAddTask(response.data);
-      resetForm(); // Reset form after successful submission
+      resetForm();
       onClose();
     } catch (error) {
-      console.error(error);
+      console.error('Error creating task:', error);
       alert('Error creating task');
     } finally {
-      setIsSubmitting(false); // Reset submitting state after the request is complete
+      setIsSubmitting(false);
     }
   };
 
   const handleCategoryChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = parseInt(e.target.value);
-    setCategories((prevCategories) =>
+    setCategories(prevCategories =>
       prevCategories.includes(value)
-        ? prevCategories.filter((category) => category !== value)
+        ? prevCategories.filter(category => category !== value)
         : [...prevCategories, value]
     );
   };
 
   const handleUserChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = parseInt(e.target.value);
-    setAssignedUsers((prevUsers) =>
+    setAssignedUsers(prevUsers =>
       prevUsers.includes(value)
-        ? prevUsers.filter((user) => user !== value)
+        ? prevUsers.filter(user => user !== value)
         : [...prevUsers, value]
     );
   };
 
-  // Reset form fields after submission
   const resetForm = () => {
     setTitle('');
     setDescription('');
@@ -137,42 +129,47 @@ const CreateTask: React.FC<CreateTaskProps> = ({ onAddTask, onClose }) => {
     setPriority('low');
     setCategories([]);
     setAssignedUsers([]);
+    setIsCompleted(false); // Reset is_completed
   };
 
   return (
     <form onSubmit={handleSubmit} className={styles['Create-form']}>
-      <div>
-        <label>Title:</label>
-        <input
-          type="text"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          required
-        />
-      </div>
-      <div>
-        <label>Description:</label>
-        <textarea
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-        />
-      </div>
-      <div>
-        <label>Due Date:</label>
-        <input
-          type="date"
-          value={dueDate}
-          onChange={(e) => setDueDate(e.target.value)}
-        />
-      </div>
-      <div>
-        <label>Priority:</label>
-        <select value={priority} onChange={(e) => setPriority(e.target.value)}>
-          <option value="low">Low</option>
-          <option value="medium">Medium</option>
-          <option value="high">High</option>
-        </select>
-      </div>
+      {/* Title */}
+      <Input
+        value={title}
+        placeholder="Title"
+        onChange={(e) => setTitle(e.target.value)}
+        required
+      />
+
+      {/* Description */}
+      <textarea
+        placeholder="Write Task requirement"
+        value={description}
+        onChange={(e) => setDescription(e.target.value)}
+      />
+
+      {/* Due Date */}
+      <Input
+        type="date"
+        value={dueDate}
+        placeholder="Due Date"
+        onChange={(e) => setDueDate(e.target.value)}
+      />
+
+      {/* Priority */}
+      <SelectList
+        label="Priority"
+        value={priority}
+        options={[
+          { value: 'low', label: 'Low' },
+          { value: 'medium', label: 'Medium' },
+          { value: 'high', label: 'High' },
+        ]}
+        onChange={setPriority}
+      />
+
+      {/* Categories */}
       <div>
         <label>Categories:</label>
         {availableCategories.map((category) => (
@@ -187,6 +184,8 @@ const CreateTask: React.FC<CreateTaskProps> = ({ onAddTask, onClose }) => {
           </div>
         ))}
       </div>
+
+      {/* Assign Users */}
       <div>
         <label>Assign Users:</label>
         {availableUsers.map((user) => (
@@ -201,9 +200,25 @@ const CreateTask: React.FC<CreateTaskProps> = ({ onAddTask, onClose }) => {
           </div>
         ))}
       </div>
-      <button type="submit" disabled={isSubmitting}>
-        {isSubmitting ? 'Creating...' : 'Create Task'}
-      </button>
+
+      {/* Is Completed */}
+      <div>
+        <label>
+          <input
+            type="checkbox"
+            checked={isCompleted}
+            onChange={(e) => setIsCompleted(e.target.checked)}
+          />
+          Mark as Completed
+        </label>
+      </div>
+
+      {/* Submit Button */}
+      <Button
+        label={isSubmitting ? 'Creating...' : 'Create Task'}
+        type="submit"
+        disabled={isSubmitting}
+      />
     </form>
   );
 };

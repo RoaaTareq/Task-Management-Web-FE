@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import Input from '../../Components/Inputs/Input';  // Import your custom Input component
-import Button from '../../Components/Buttons/Button';  // Import your custom Button component
-import styles from './CSS/Auth.module.css';  // Import your CSS module
+import React, { useState, useEffect, useCallback } from 'react';
+import Input from '../../Components/Inputs/Input';  // Custom Input component
+import Button from '../../Components/Buttons/Button';  // Custom Button component
+import styles from './CSS/Auth.module.css';  // CSS module
 import { register } from '../../services/authService'; 
-import Left from '../../../src/images/left.svg'; // Import the register function from your service
+import Left from '../../../src/images/left.svg'; // Regular import for SVG image
 
 const Register: React.FC = () => {
   const [username, setUsername] = useState<string>('');
@@ -12,7 +12,8 @@ const Register: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
-  const handleSubmit = async (event: React.FormEvent) => {
+  // Memoize handleSubmit to avoid unnecessary re-creation on each render
+  const handleSubmit = useCallback(async (event: React.FormEvent) => {
     event.preventDefault();
     setError(null);
     setSuccess(null);
@@ -28,26 +29,23 @@ const Register: React.FC = () => {
       setEmail('');
       setPassword('');
     } catch (error: any) {
-      // Check if error has a response from the API and display the appropriate message
+      // Display proper error message from API response
       if (error.response && error.response.data) {
         setError(error.response.data.message || 'Registration failed');
       } else {
         setError('An unexpected error occurred');
       }
     }
-  };
+  }, [username, email, password]);
 
+  // Handle error message display and timeout
   useEffect(() => {
     if (error) {
-      console.log('Setting up timeout for error message');
       const id = setTimeout(() => {
-       
         setError(null);
       }, 3000);
       
-      // Cleanup timeout if the error changes or component unmounts
       return () => {
-        console.log('Clearing timeout');
         clearTimeout(id);
       };
     }
@@ -90,7 +88,7 @@ const Register: React.FC = () => {
             </form>
           </div>
           <div>
-            <img src={Left} alt="" className='w-100 m-auto' />
+            <img src={Left} alt="Illustration" className='w-100 m-auto' /> {/* Image import for SVG */}
           </div>
         </div>
       </div>
