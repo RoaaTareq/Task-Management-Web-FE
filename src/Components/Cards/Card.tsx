@@ -1,5 +1,4 @@
-import React from 'react';
-import styles from './Card.module.css'; // Adjust the path as needed
+import React, { ReactNode } from 'react';
 
 interface CardProps {
   title: string;
@@ -9,9 +8,10 @@ interface CardProps {
   due_date: string;
   categories?: string[];
   users?: string[];
-  priorityClass: string; // New prop to handle the priority color
+  priorityClass: string;
   onEdit: () => void;
   onDelete: () => void;
+  children?: ReactNode; // Add children to the type definition
 }
 
 const Card: React.FC<CardProps> = ({
@@ -24,25 +24,23 @@ const Card: React.FC<CardProps> = ({
   users,
   priorityClass,
   onEdit,
-  onDelete
+  onDelete,
+  children, // Accept children as a prop
 }) => {
   return (
-    <div className={styles.card}>
-      <div className={styles.cardBody}>
-        <h5 className={styles.cardTitle}>{title}</h5>
-        <p className={styles.cardContent}>{content}</p>
-        <p className={styles.cardCategory}>{category}</p>
-        <p className={styles.cardDueDate}>Due: {due_date}</p>
-        {/* Apply the dynamic priority class */}
-        <p className={`${styles.cardPriority} ${priorityClass}`}>{priority}</p>
-        <div className={styles.cardActions}>
-          <button onClick={onEdit} className={styles.editButton}>Edit</button>
-          <button onClick={onDelete} className={styles.deleteButton}>Delete</button>
-        </div>
-      </div>
+    <div className={`card ${priorityClass}`}>
+      <h2>{title}</h2>
+      <p>{content}</p>
+      <p>{category}</p>
+      <p>{priority}</p>
+      <p>{due_date}</p>
+      <p>Categories: {categories?.join(', ') || 'None'}</p>
+      <p>Assigned Users: {users?.join(', ') || 'None'}</p>
+      <button onClick={onEdit}>Edit</button>
+      <button onClick={onDelete}>Delete</button>
+      {children} {/* Render children here */}
     </div>
   );
 };
-
 
 export default Card;

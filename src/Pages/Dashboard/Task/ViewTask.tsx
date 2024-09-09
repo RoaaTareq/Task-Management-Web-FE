@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom'; // Change useHistory to useNavigate
 import axios from 'axios';
 import Card from '../../../Components/Cards/Card';
 import Echo from 'laravel-echo';
@@ -30,6 +31,7 @@ interface ViewTaskProps {
 const ViewTask: React.FC<ViewTaskProps> = ({ tasks = [], onEdit, onDelete, setTasks }) => {
   const [filterPriority, setFilterPriority] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const navigate = useNavigate(); // Change useHistory to useNavigate
 
   const handleDelete = async (taskId: number) => {
     const token = localStorage.getItem('token');
@@ -71,9 +73,11 @@ const ViewTask: React.FC<ViewTaskProps> = ({ tasks = [], onEdit, onDelete, setTa
     }
   };
 
+  const handleViewTask = (taskId: number) => {
+    navigate(`/tasks/${taskId}`); // Replace history.push with navigate
+  };
+
   useEffect(() => {
-    console.log('Pusher Key:', process.env.REACT_APP_PUSHER_APP_KEY);
-  console.log('Pusher Cluster:', process.env.REACT_APP_PUSHER_APP_CLUSTER);
     if (!process.env.REACT_APP_PUSHER_APP_KEY || !process.env.REACT_APP_PUSHER_APP_CLUSTER) {
       console.error('Pusher key or cluster is missing!');
       return;
@@ -83,25 +87,22 @@ const ViewTask: React.FC<ViewTaskProps> = ({ tasks = [], onEdit, onDelete, setTa
   
     const echo = new Echo({
       broadcaster: 'pusher',
-      key: '6b8fe1afa1493628c215', // Hardcoded for testing
-      cluster: 'ap2', // Hardcoded for testing
+      key: process.env.REACT_APP_PUSHER_APP_KEY!,
+      cluster: process.env.REACT_APP_PUSHER_APP_CLUSTER!,
       forceTLS: true,
     });
-    
-  
+
     const channel = echo.channel('tasks');
     channel.listen('TaskUpdated', (e: TaskUpdatedEvent) => {
-      console.log('Task updated:', e.task);
       setTasks((prevTasks) =>
         prevTasks.map((task) => (task.id === e.task.id ? e.task : task))
       );
     });
-  
+
     return () => {
       echo.leaveChannel('tasks');
     };
   }, [setTasks]);
-  
 
   const filteredTasks = Array.isArray(tasks)
     ? filterPriority
@@ -146,7 +147,9 @@ const ViewTask: React.FC<ViewTaskProps> = ({ tasks = [], onEdit, onDelete, setTa
                   priorityClass={getPriorityClass(task.priority)}
                   onEdit={() => onEdit(task.id)}
                   onDelete={() => handleDelete(task.id)}
-                />
+                >
+                  <button onClick={() => handleViewTask(task.id)}>View Task</button>
+                </Card>
               </div>
             ))}
           </div>
