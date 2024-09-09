@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import Card from '../../../Components/Cards/Card'; // Adjust the path as needed
-import styles from './CSS/Task.module.css'; 
+import Card from '../../../Components/Cards/Card';
+import Echo from 'laravel-echo';
+import Pusher from 'pusher-js';
+import styles from './CSS/Task.module.css';
 
 interface Task {
   id: number;
@@ -14,6 +16,10 @@ interface Task {
   users?: string[];
 }
 
+interface TaskUpdatedEvent {
+  task: Task;
+}
+
 interface ViewTaskProps {
   tasks: Task[];
   onEdit: (taskId: number) => void;
@@ -22,8 +28,8 @@ interface ViewTaskProps {
 }
 
 const ViewTask: React.FC<ViewTaskProps> = ({ tasks = [], onEdit, onDelete, setTasks }) => {
-  const [filterPriority, setFilterPriority] = useState<string | null>(null); // State for the priority filter
-  const [successMessage, setSuccessMessage] = useState<string | null>(null); // State for success message
+  const [filterPriority, setFilterPriority] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   const handleDelete = async (taskId: number) => {
     const token = localStorage.getItem('token');
@@ -41,9 +47,8 @@ const ViewTask: React.FC<ViewTaskProps> = ({ tasks = [], onEdit, onDelete, setTa
       });
 
       setTasks((prevTasks) => prevTasks.filter((task) => task.id !== taskId));
-      setSuccessMessage('Task deleted successfully'); // Set success message
+      setSuccessMessage('Task deleted successfully');
 
-      // Clear success message after 3 seconds
       setTimeout(() => {
         setSuccessMessage(null);
       }, 3000);
@@ -53,21 +58,48 @@ const ViewTask: React.FC<ViewTaskProps> = ({ tasks = [], onEdit, onDelete, setTa
     }
   };
 
-  // Function to determine priority class for styling
   const getPriorityClass = (priority: string) => {
     switch (priority.toLowerCase()) {
       case 'low':
-        return styles.priorityLow; // Green class
+        return styles.priorityLow;
       case 'medium':
-        return styles.priorityMedium; // Orange class
+        return styles.priorityMedium;
       case 'high':
-        return styles.priorityHigh; // Red class
+        return styles.priorityHigh;
       default:
         return '';
     }
   };
 
-  // Ensure tasks is an array
+  useEffect(() => {
+    if (!process.env.REACT_APP_PUSHER_APP_KEY || !process.env.REACT_APP_PUSHER_APP_CLUSTER) {
+      console.error('Pusher key or cluster is missing!');
+      return;
+    }
+  
+    window.Pusher = Pusher;
+  
+    const echo = new Echo({
+      broadcaster: 'pusher',
+      key: process.env.REACT_APP_PUSHER_APP_KEY,
+      cluster: process.env.REACT_APP_PUSHER_APP_CLUSTER,
+      forceTLS: true,
+    });
+  
+    const channel = echo.channel('tasks');
+    channel.listen('TaskUpdated', (e: TaskUpdatedEvent) => {
+      console.log('Task updated:', e.task);
+      setTasks((prevTasks) =>
+        prevTasks.map((task) => (task.id === e.task.id ? e.task : task))
+      );
+    });
+  
+    return () => {
+      echo.leaveChannel('tasks');
+    };
+  }, [setTasks]);
+  
+
   const filteredTasks = Array.isArray(tasks)
     ? filterPriority
       ? tasks.filter((task) => task.priority.toLowerCase() === filterPriority.toLowerCase())
@@ -77,7 +109,6 @@ const ViewTask: React.FC<ViewTaskProps> = ({ tasks = [], onEdit, onDelete, setTa
   return (
     <section>
       <div className="container">
-        {/* Filter Buttons */}
         <div className={styles['filter-container']}>
           <button onClick={() => setFilterPriority(null)} className={styles['filter-button']}>
             All
@@ -93,7 +124,6 @@ const ViewTask: React.FC<ViewTaskProps> = ({ tasks = [], onEdit, onDelete, setTa
           </button>
         </div>
 
-        {/* Success Message */}
         {successMessage && <div className={styles.successMessage}>{successMessage}</div>}
 
         {filteredTasks.length === 0 ? (
@@ -110,7 +140,7 @@ const ViewTask: React.FC<ViewTaskProps> = ({ tasks = [], onEdit, onDelete, setTa
                   due_date={task.due_date}
                   categories={task.categories}
                   users={task.users}
-                  priorityClass={getPriorityClass(task.priority)} // Priority-based styling
+                  priorityClass={getPriorityClass(task.priority)}
                   onEdit={() => onEdit(task.id)}
                   onDelete={() => handleDelete(task.id)}
                 />

@@ -3,6 +3,14 @@ declare module '*.module.scss' {
     const content: { [className: string]: string };
     export default content;
   }
+  export {};
+
+declare global {
+  interface Window {
+    Pusher: any; // You can also specify the Pusher type here if needed
+  }
+}
+
   // declaration.d.ts
 declare module '*.module.css' {
   const classes: { [key: string]: string };
