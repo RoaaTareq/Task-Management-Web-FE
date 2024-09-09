@@ -17,8 +17,7 @@ const DashboardLayout = () => {
                         <Routes>
                             <Route path="/tasks" element={<TaskList />} />
                             <Route path="/summary" element={<Summary />} />
-                          
-                        </Routes>
+                                                  </Routes>
                     </div>
                 </div>
             </div>

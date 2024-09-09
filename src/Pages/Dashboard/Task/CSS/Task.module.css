@@ -30,6 +30,7 @@
   margin: 20px 0;
   display: flex;
 
+
 }
 
 .filter-button {
@@ -73,4 +74,13 @@
       max-width: 600px; 
   }
 
+}
+/* Styles for screens with a width between 320px and 1024px */
+@media (min-width: 320px) and (max-width: 1024px) {
+  .filter-container{
+    flex-direction: column;
+  }
+  .filter-button{
+    margin: 6px 0;
+  }
 }

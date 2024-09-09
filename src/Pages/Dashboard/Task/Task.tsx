@@ -175,15 +175,19 @@ const TaskList: React.FC = () => {
   return (
     <section>
       <div className="container">
-        <div className="d-flex justify-content-between mt-5">
-          <h1>Task</h1>
-          <Button
+        <div className="row align-items-center">
+         <div className='col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12'>
+         <h1>Task</h1>
+         
+         </div>
+         <div className='col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12'>
+           <Button
             label="Add Task +"
             type="submit"
             styleType="primary"
             onClick={() => setShowCreateTask(true)}
             className={styles.btnOpen}
-          />
+          /></div>
         </div>
 
         {error && <p className="error-message">{error}</p>}
