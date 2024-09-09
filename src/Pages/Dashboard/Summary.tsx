@@ -1,5 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { Bar } from 'react-chartjs-2';
+import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
+
+// Register chart components
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 interface TaskCategory {
     [key: string]: any[]; // Replace `any` with your task type if possible
@@ -60,34 +65,94 @@ const Dashboard = () => {
     if (loading) return <div>Loading...</div>;
     if (error) return <div>Error: {error}</div>;
 
+    // Data for the priority statistics bar chart
+    const priorityData = {
+        labels: ['Low', 'Medium', 'High'],
+        datasets: [
+            {
+                label: 'Number of Tasks',
+                data: [
+                    statistics.priority_statistics.low,
+                    statistics.priority_statistics.medium,
+                    statistics.priority_statistics.high
+                ],
+                backgroundColor: ['#36A2EB', '#FFCE56', '#FF6384'],
+            }
+        ]
+    };
+
+    // Data for the tasks per category bar chart
+    const categoryLabels = Object.keys(statistics.tasks_per_category);
+    const categoryData = Object.values(statistics.tasks_per_category).map((count: any) => count.length);
+    const categoryChartData = {
+        labels: categoryLabels,
+        datasets: [
+            {
+                label: 'Tasks per Category',
+                data: categoryData,
+                backgroundColor: '#4BC0C0',
+            }
+        ]
+    };
+
+    // Data for the task overview bar chart (Total, Completed, Pending)
+    const taskOverviewData = {
+        labels: ['Total Tasks', 'Completed Tasks', 'Pending Tasks'],
+        datasets: [
+            {
+                label: 'Task Overview',
+                data: [
+                    statistics.total_tasks,
+                    statistics.completed_tasks,
+                    statistics.pending_tasks,
+                ],
+                backgroundColor: ['#36A2EB', '#4BC0C0', '#FF6384'], // You can adjust these colors
+            },
+        ],
+    };
+
     return (
         <div className="dashboard">
-            <h2>Task Statistics Dashboard</h2>
-            <div className="stats-section">
-                <p><strong>Total Tasks:</strong> {statistics.total_tasks}</p>
-                <p><strong>Completed Tasks:</strong> {statistics.completed_tasks}</p>
-                <p><strong>Pending Tasks:</strong> {statistics.pending_tasks}</p>
-            </div>
-            <div className="priority-section">
+          
+            <div className="priority-section" style={{ width: '60%', margin: '0 auto' }}>
                 <h3>Priority Statistics</h3>
-                <p><strong>Low Priority:</strong> {statistics.priority_statistics.low}</p>
-                <p><strong>Medium Priority:</strong> {statistics.priority_statistics.medium}</p>
-                <p><strong>High Priority:</strong> {statistics.priority_statistics.high}</p>
+                <Bar
+                    data={priorityData}
+                    options={{
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                            },
+                            title: {
+                                display: true,
+                                text: 'Tasks by Priority'
+                            }
+                        }
+                    }}
+                />
             </div>
-            <div className="category-section">
-                <h3>Tasks per Category</h3>
-                {Object.keys(statistics.tasks_per_category).length > 0 ? (
-                    <ul>
-                        {Object.entries(statistics.tasks_per_category).map(([category, taskCount], index) => (
-                            <li key={index}>
-                                <strong>{category}:</strong> {taskCount} tasks
-                            </li>
-                        ))}
-                    </ul>
-                ) : (
-                    <p>No categories assigned yet.</p>
-                )}
+
+            {/* Task Overview Bar Chart */}
+            <div className="task-overview-section" style={{ width: '60%', margin: '0 auto' }}>
+                <h3>Task Overview</h3>
+                <Bar
+                    data={taskOverviewData}
+                    options={{
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                            },
+                            title: {
+                                display: true,
+                                text: 'Overview of Total, Completed, and Pending Tasks'
+                            }
+                        }
+                    }}
+                />
             </div>
+
         </div>
     );
 };
